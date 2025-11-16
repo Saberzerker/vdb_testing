@@ -1,0 +1,1502 @@
+{
+  "0": {
+    "partition_idx": 0,
+    "local_idx": 0,
+    "text": "Hypertension is blood pressure above 140/90 mmHg, major risk factor for heart disease and stroke."
+  },
+  "1": {
+    "partition_idx": 0,
+    "local_idx": 1,
+    "text": "Stage 1 hypertension is 130-139/80-89 mmHg, often manageable with lifestyle changes alone."
+  },
+  "2": {
+    "partition_idx": 0,
+    "local_idx": 2,
+    "text": "Stage 2 hypertension is 140+/90+ mmHg, typically requires medication and lifestyle changes."
+  },
+  "3": {
+    "partition_idx": 0,
+    "local_idx": 3,
+    "text": "Hypertensive crisis is BP above 180/120 mmHg, requiring immediate emergency medical attention."
+  },
+  "4": {
+    "partition_idx": 0,
+    "local_idx": 4,
+    "text": "Atherosclerosis is plaque buildup in arteries, restricting blood flow to vital organs."
+  },
+  "5": {
+    "partition_idx": 0,
+    "local_idx": 5,
+    "text": "Coronary artery disease develops when heart arteries become narrowed by cholesterol plaque."
+  },
+  "6": {
+    "partition_idx": 0,
+    "local_idx": 6,
+    "text": "Myocardial infarction occurs when coronary blockage prevents oxygen reaching heart muscle."
+  },
+  "7": {
+    "partition_idx": 0,
+    "local_idx": 7,
+    "text": "Heart attack symptoms include chest pressure, arm pain, shortness of breath, and sweating."
+  },
+  "8": {
+    "partition_idx": 0,
+    "local_idx": 8,
+    "text": "Women may have atypical heart attack symptoms including nausea, fatigue, and back pain."
+  },
+  "9": {
+    "partition_idx": 0,
+    "local_idx": 9,
+    "text": "Angina is chest pain from reduced heart blood flow, typically triggered by exertion or stress."
+  },
+  "10": {
+    "partition_idx": 0,
+    "local_idx": 10,
+    "text": "Stable angina follows predictable patterns while unstable angina occurs at rest."
+  },
+  "11": {
+    "partition_idx": 0,
+    "local_idx": 11,
+    "text": "Atrial fibrillation is irregular heartbeat increasing stroke risk through blood clot formation."
+  },
+  "12": {
+    "partition_idx": 0,
+    "local_idx": 12,
+    "text": "Heart failure occurs when heart cannot pump enough blood to meet body's metabolic needs."
+  },
+  "13": {
+    "partition_idx": 0,
+    "local_idx": 13,
+    "text": "Congestive heart failure causes fluid accumulation in lungs, legs, and abdomen."
+  },
+  "14": {
+    "partition_idx": 0,
+    "local_idx": 14,
+    "text": "ACE inhibitors treat hypertension and heart failure by reducing angiotensin II formation."
+  },
+  "15": {
+    "partition_idx": 0,
+    "local_idx": 15,
+    "text": "Beta-blockers slow heart rate and reduce blood pressure by blocking epinephrine effects."
+  },
+  "16": {
+    "partition_idx": 0,
+    "local_idx": 16,
+    "text": "Statins lower cholesterol by blocking HMG-CoA reductase enzyme in liver."
+  },
+  "17": {
+    "partition_idx": 0,
+    "local_idx": 17,
+    "text": "Aspirin therapy reduces heart attack risk by preventing platelet aggregation and clotting."
+  },
+  "18": {
+    "partition_idx": 0,
+    "local_idx": 18,
+    "text": "Cardiac catheterization visualizes coronary arteries and can open blockages with stents."
+  },
+  "19": {
+    "partition_idx": 0,
+    "local_idx": 19,
+    "text": "Coronary artery bypass grafting redirects blood flow around blocked coronary arteries."
+  },
+  "20": {
+    "partition_idx": 0,
+    "local_idx": 20,
+    "text": "Electrocardiogram records heart's electrical activity, detecting rhythm abnormalities and ischemia."
+  },
+  "21": {
+    "partition_idx": 0,
+    "local_idx": 21,
+    "text": "Echocardiogram uses ultrasound to visualize heart structure and assess pumping function."
+  },
+  "22": {
+    "partition_idx": 0,
+    "local_idx": 22,
+    "text": "Stress test evaluates heart function during exercise, revealing ischemia not apparent at rest."
+  },
+  "23": {
+    "partition_idx": 0,
+    "local_idx": 23,
+    "text": "LDL cholesterol below 100 mg/dL is optimal, while HDL above 60 mg/dL protects heart."
+  },
+  "24": {
+    "partition_idx": 0,
+    "local_idx": 24,
+    "text": "Smoking cessation dramatically reduces cardiovascular disease risk within months of quitting."
+  },
+  "25": {
+    "partition_idx": 0,
+    "local_idx": 25,
+    "text": "Mediterranean diet reduces heart disease risk through healthy fats and plant-based foods."
+  },
+  "26": {
+    "partition_idx": 0,
+    "local_idx": 26,
+    "text": "Regular aerobic exercise strengthens heart and reduces cardiovascular disease risk by 30-40%."
+  },
+  "27": {
+    "partition_idx": 0,
+    "local_idx": 27,
+    "text": "Stroke occurs when brain blood supply is interrupted, causing rapid brain cell death."
+  },
+  "28": {
+    "partition_idx": 0,
+    "local_idx": 28,
+    "text": "Ischemic stroke is caused by blood clot blocking brain artery, treated with clot-busting drugs."
+  },
+  "29": {
+    "partition_idx": 0,
+    "local_idx": 29,
+    "text": "Hemorrhagic stroke involves blood vessel rupture, creating pressure damaging brain tissue."
+  },
+  "30": {
+    "partition_idx": 0,
+    "local_idx": 30,
+    "text": "FAST acronym for stroke: Face drooping, Arm weakness, Speech difficulty, Time to call 911."
+  },
+  "31": {
+    "partition_idx": 0,
+    "local_idx": 31,
+    "text": "tPA dissolves clots if given within 4.5 hours of ischemic stroke symptom onset."
+  },
+  "32": {
+    "partition_idx": 0,
+    "local_idx": 32,
+    "text": "Deep vein thrombosis forms blood clots in deep leg veins, risking pulmonary embolism."
+  },
+  "33": {
+    "partition_idx": 0,
+    "local_idx": 33,
+    "text": "Pulmonary embolism occurs when blood clot travels to lungs, potentially life-threatening."
+  },
+  "34": {
+    "partition_idx": 0,
+    "local_idx": 34,
+    "text": "Peripheral artery disease causes leg pain with walking from arterial narrowing."
+  },
+  "35": {
+    "partition_idx": 0,
+    "local_idx": 35,
+    "text": "Aortic aneurysm is dangerous artery bulging that can rupture, causing internal bleeding."
+  },
+  "36": {
+    "partition_idx": 0,
+    "local_idx": 36,
+    "text": "Pacemaker regulates heart rhythm by delivering electrical impulses when heart beats too slowly."
+  },
+  "37": {
+    "partition_idx": 0,
+    "local_idx": 37,
+    "text": "Implantable defibrillator detects and corrects dangerous arrhythmias automatically."
+  },
+  "38": {
+    "partition_idx": 0,
+    "local_idx": 38,
+    "text": "Cardiac rehabilitation combines exercise, education, and support improving heart disease outcomes."
+  },
+  "39": {
+    "partition_idx": 0,
+    "local_idx": 39,
+    "text": "Blood pressure control is single most important intervention for preventing stroke."
+  },
+  "40": {
+    "partition_idx": 0,
+    "local_idx": 40,
+    "text": "Type 1 diabetes is autoimmune destruction of insulin-producing pancreatic beta cells."
+  },
+  "41": {
+    "partition_idx": 0,
+    "local_idx": 41,
+    "text": "Type 2 diabetes involves insulin resistance where body cells don't respond properly to insulin."
+  },
+  "42": {
+    "partition_idx": 0,
+    "local_idx": 42,
+    "text": "Prediabetes is blood glucose 100-125 mg/dL fasting, indicating high diabetes risk."
+  },
+  "43": {
+    "partition_idx": 0,
+    "local_idx": 43,
+    "text": "Gestational diabetes develops during pregnancy, increasing risks for mother and baby."
+  },
+  "44": {
+    "partition_idx": 0,
+    "local_idx": 44,
+    "text": "Hemoglobin A1C measures average blood glucose over previous 2-3 months."
+  },
+  "45": {
+    "partition_idx": 0,
+    "local_idx": 45,
+    "text": "A1C target for most diabetics is below 7% to prevent long-term complications."
+  },
+  "46": {
+    "partition_idx": 0,
+    "local_idx": 46,
+    "text": "Fasting glucose above 126 mg/dL on two occasions confirms diabetes diagnosis."
+  },
+  "47": {
+    "partition_idx": 0,
+    "local_idx": 47,
+    "text": "Insulin regulates blood sugar by facilitating glucose uptake into body cells."
+  },
+  "48": {
+    "partition_idx": 0,
+    "local_idx": 48,
+    "text": "Metformin is first-line type 2 diabetes medication, reducing liver glucose production."
+  },
+  "49": {
+    "partition_idx": 0,
+    "local_idx": 49,
+    "text": "GLP-1 agonists improve glucose control, promote weight loss, and reduce cardiovascular events."
+  },
+  "50": {
+    "partition_idx": 0,
+    "local_idx": 50,
+    "text": "SGLT2 inhibitors increase urinary glucose excretion, lowering blood sugar and protecting heart."
+  },
+  "51": {
+    "partition_idx": 0,
+    "local_idx": 51,
+    "text": "Continuous glucose monitors provide real-time glucose readings, improving diabetes management."
+  },
+  "52": {
+    "partition_idx": 0,
+    "local_idx": 52,
+    "text": "Diabetic ketoacidosis is life-threatening type 1 complication requiring emergency treatment."
+  },
+  "53": {
+    "partition_idx": 0,
+    "local_idx": 53,
+    "text": "Hypoglycemia below 70 mg/dL causes shakiness, confusion, and can lead to unconsciousness."
+  },
+  "54": {
+    "partition_idx": 0,
+    "local_idx": 54,
+    "text": "Diabetic neuropathy damages nerves causing pain, numbness, especially in feet."
+  },
+  "55": {
+    "partition_idx": 0,
+    "local_idx": 55,
+    "text": "Diabetic retinopathy damages retinal blood vessels, leading to vision loss if untreated."
+  },
+  "56": {
+    "partition_idx": 0,
+    "local_idx": 56,
+    "text": "Diabetic nephropathy causes kidney damage, potentially progressing to kidney failure."
+  },
+  "57": {
+    "partition_idx": 0,
+    "local_idx": 57,
+    "text": "Diabetes increases cardiovascular disease risk 2-4 times through accelerated atherosclerosis."
+  },
+  "58": {
+    "partition_idx": 0,
+    "local_idx": 58,
+    "text": "Foot care is critical for diabetics to prevent ulcers, infections, and amputations."
+  },
+  "59": {
+    "partition_idx": 0,
+    "local_idx": 59,
+    "text": "Carbohydrate counting helps diabetics match insulin doses to food intake for better control."
+  },
+  "60": {
+    "partition_idx": 0,
+    "local_idx": 60,
+    "text": "Regular exercise improves insulin sensitivity and glucose control in both diabetes types."
+  },
+  "61": {
+    "partition_idx": 0,
+    "local_idx": 61,
+    "text": "Weight loss of 5-10% significantly improves type 2 diabetes control and may achieve remission."
+  },
+  "62": {
+    "partition_idx": 0,
+    "local_idx": 62,
+    "text": "Hypothyroidism slows metabolism, causing fatigue, weight gain, and cold intolerance."
+  },
+  "63": {
+    "partition_idx": 0,
+    "local_idx": 63,
+    "text": "Hyperthyroidism accelerates metabolism, causing weight loss, heat intolerance, and anxiety."
+  },
+  "64": {
+    "partition_idx": 0,
+    "local_idx": 64,
+    "text": "TSH test screens thyroid function, elevated in hypothyroidism, suppressed in hyperthyroidism."
+  },
+  "65": {
+    "partition_idx": 0,
+    "local_idx": 65,
+    "text": "Levothyroxine replaces thyroid hormone in hypothyroidism, taken daily on empty stomach."
+  },
+  "66": {
+    "partition_idx": 0,
+    "local_idx": 66,
+    "text": "Hashimoto's thyroiditis is autoimmune hypothyroidism, most common thyroid dysfunction cause."
+  },
+  "67": {
+    "partition_idx": 0,
+    "local_idx": 67,
+    "text": "Graves' disease is autoimmune hyperthyroidism, often causing bulging eyes."
+  },
+  "68": {
+    "partition_idx": 0,
+    "local_idx": 68,
+    "text": "Cushing's syndrome results from excess cortisol, causing weight gain and hypertension."
+  },
+  "69": {
+    "partition_idx": 0,
+    "local_idx": 69,
+    "text": "Addison's disease involves insufficient cortisol, causing fatigue and low blood pressure."
+  },
+  "70": {
+    "partition_idx": 0,
+    "local_idx": 70,
+    "text": "Polycystic ovary syndrome causes hormonal imbalance, irregular periods, and infertility."
+  },
+  "71": {
+    "partition_idx": 0,
+    "local_idx": 71,
+    "text": "Growth hormone deficiency in children impairs growth, requiring hormone replacement therapy."
+  },
+  "72": {
+    "partition_idx": 0,
+    "local_idx": 72,
+    "text": "Metabolic syndrome combines obesity, hypertension, high triglycerides, and insulin resistance."
+  },
+  "73": {
+    "partition_idx": 0,
+    "local_idx": 73,
+    "text": "Thyroid nodules are common, usually benign, but require evaluation to exclude cancer."
+  },
+  "74": {
+    "partition_idx": 0,
+    "local_idx": 74,
+    "text": "Radioactive iodine treats hyperthyroidism by selectively destroying overactive thyroid tissue."
+  },
+  "75": {
+    "partition_idx": 0,
+    "local_idx": 75,
+    "text": "Adrenal insufficiency requires immediate steroid replacement during illness to prevent crisis."
+  },
+  "76": {
+    "partition_idx": 0,
+    "local_idx": 76,
+    "text": "Diabetes management requires monitoring blood glucose, medications, diet, and exercise."
+  },
+  "77": {
+    "partition_idx": 0,
+    "local_idx": 77,
+    "text": "Bariatric surgery can induce type 2 diabetes remission through metabolic changes."
+  },
+  "78": {
+    "partition_idx": 0,
+    "local_idx": 78,
+    "text": "Insulin pump delivers continuous insulin, closely mimicking normal pancreatic function."
+  },
+  "79": {
+    "partition_idx": 0,
+    "local_idx": 79,
+    "text": "Glycemic index ranks carbohydrates by blood sugar impact, guiding diabetic food choices."
+  },
+  "80": {
+    "partition_idx": 0,
+    "local_idx": 80,
+    "text": "Asthma is chronic airway inflammation causing reversible bronchoconstriction and wheezing."
+  },
+  "81": {
+    "partition_idx": 0,
+    "local_idx": 81,
+    "text": "Asthma affects 25 million Americans, leading chronic disease in children."
+  },
+  "82": {
+    "partition_idx": 0,
+    "local_idx": 82,
+    "text": "Asthma triggers include allergens, exercise, cold air, smoke, and viral infections."
+  },
+  "83": {
+    "partition_idx": 0,
+    "local_idx": 83,
+    "text": "Quick-relief bronchodilators rapidly open airways during asthma attacks."
+  },
+  "84": {
+    "partition_idx": 0,
+    "local_idx": 84,
+    "text": "Inhaled corticosteroids control asthma inflammation long-term, reducing attack frequency."
+  },
+  "85": {
+    "partition_idx": 0,
+    "local_idx": 85,
+    "text": "Peak flow meter measures airflow obstruction, helping monitor asthma control."
+  },
+  "86": {
+    "partition_idx": 0,
+    "local_idx": 86,
+    "text": "COPD combines chronic bronchitis and emphysema, causing progressive breathing difficulty."
+  },
+  "87": {
+    "partition_idx": 0,
+    "local_idx": 87,
+    "text": "Smoking causes 80-90% of COPD cases through chronic airway irritation and damage."
+  },
+  "88": {
+    "partition_idx": 0,
+    "local_idx": 88,
+    "text": "COPD symptoms include chronic cough, sputum production, and progressive shortness of breath."
+  },
+  "89": {
+    "partition_idx": 0,
+    "local_idx": 89,
+    "text": "Spirometry diagnoses COPD by measuring airflow obstruction severity through FEV1/FVC ratio."
+  },
+  "90": {
+    "partition_idx": 0,
+    "local_idx": 90,
+    "text": "Smoking cessation is most important COPD intervention, significantly slowing disease progression."
+  },
+  "91": {
+    "partition_idx": 0,
+    "local_idx": 91,
+    "text": "Bronchodilators relieve COPD symptoms by relaxing airway muscles and improving breathing."
+  },
+  "92": {
+    "partition_idx": 0,
+    "local_idx": 92,
+    "text": "Pulmonary rehabilitation combines exercise, education, and support improving COPD outcomes."
+  },
+  "93": {
+    "partition_idx": 0,
+    "local_idx": 93,
+    "text": "Supplemental oxygen therapy increases survival in COPD patients with chronic hypoxemia."
+  },
+  "94": {
+    "partition_idx": 0,
+    "local_idx": 94,
+    "text": "Pneumonia inflames lung air sacs, filling them with fluid impairing gas exchange."
+  },
+  "95": {
+    "partition_idx": 0,
+    "local_idx": 95,
+    "text": "Bacterial pneumonia often follows viral respiratory infection, causing productive cough and fever."
+  },
+  "96": {
+    "partition_idx": 0,
+    "local_idx": 96,
+    "text": "Antibiotic choice for pneumonia depends on likely pathogens, severity, and resistance patterns."
+  },
+  "97": {
+    "partition_idx": 0,
+    "local_idx": 97,
+    "text": "Pneumococcal vaccine prevents Streptococcus pneumoniae, leading bacterial pneumonia cause."
+  },
+  "98": {
+    "partition_idx": 0,
+    "local_idx": 98,
+    "text": "Tuberculosis is bacterial infection primarily affecting lungs, requiring prolonged antibiotic treatment."
+  },
+  "99": {
+    "partition_idx": 0,
+    "local_idx": 99,
+    "text": "TB symptoms include chronic cough, night sweats, weight loss, and blood-tinged sputum."
+  },
+  "100": {
+    "partition_idx": 0,
+    "local_idx": 100,
+    "text": "Active TB requires 6-9 months of multiple antibiotics to prevent resistance and ensure cure."
+  },
+  "101": {
+    "partition_idx": 0,
+    "local_idx": 101,
+    "text": "Pulmonary embolism blocks pulmonary arteries with blood clots, causing sudden dyspnea."
+  },
+  "102": {
+    "partition_idx": 0,
+    "local_idx": 102,
+    "text": "Lung cancer is leading cancer killer, with smoking responsible for 85% of cases."
+  },
+  "103": {
+    "partition_idx": 0,
+    "local_idx": 103,
+    "text": "Low-dose CT screening reduces lung cancer mortality in high-risk current and former smokers."
+  },
+  "104": {
+    "partition_idx": 0,
+    "local_idx": 104,
+    "text": "Bronchitis inflames bronchial tubes, causing cough and mucus production, often viral."
+  },
+  "105": {
+    "partition_idx": 0,
+    "local_idx": 105,
+    "text": "Sleep apnea causes repeated breathing interruptions during sleep, increasing cardiovascular risk."
+  },
+  "106": {
+    "partition_idx": 0,
+    "local_idx": 106,
+    "text": "CPAP therapy maintains positive airway pressure, preventing airway collapse in sleep apnea."
+  },
+  "107": {
+    "partition_idx": 0,
+    "local_idx": 107,
+    "text": "Influenza causes seasonal respiratory illness, preventable with annual vaccination."
+  },
+  "108": {
+    "partition_idx": 0,
+    "local_idx": 108,
+    "text": "COVID-19 vaccines dramatically reduce severe disease, hospitalization, and death risk."
+  },
+  "109": {
+    "partition_idx": 0,
+    "local_idx": 109,
+    "text": "Inhaler technique is critical for asthma and COPD control, requires proper patient education."
+  },
+  "110": {
+    "partition_idx": 0,
+    "local_idx": 110,
+    "text": "Alzheimer's disease progressively destroys memory through brain cell death and protein accumulation."
+  },
+  "111": {
+    "partition_idx": 0,
+    "local_idx": 111,
+    "text": "Beta-amyloid plaques and tau tangles are Alzheimer's hallmark brain pathological changes."
+  },
+  "112": {
+    "partition_idx": 0,
+    "local_idx": 112,
+    "text": "Alzheimer's affects 6.7 million Americans aged 65+, projected to triple by 2060."
+  },
+  "113": {
+    "partition_idx": 0,
+    "local_idx": 113,
+    "text": "Early Alzheimer's symptoms include memory loss, confusion, and difficulty with familiar tasks."
+  },
+  "114": {
+    "partition_idx": 0,
+    "local_idx": 114,
+    "text": "Cholinesterase inhibitors modestly improve Alzheimer's cognitive symptoms and daily function."
+  },
+  "115": {
+    "partition_idx": 0,
+    "local_idx": 115,
+    "text": "Memantine regulates glutamate activity in moderate-to-severe Alzheimer's disease."
+  },
+  "116": {
+    "partition_idx": 0,
+    "local_idx": 116,
+    "text": "Parkinson's disease causes dopamine deficiency in brain, producing motor symptoms."
+  },
+  "117": {
+    "partition_idx": 0,
+    "local_idx": 117,
+    "text": "Parkinson's classic triad: resting tremor, rigidity, and bradykinesia (slow movement)."
+  },
+  "118": {
+    "partition_idx": 0,
+    "local_idx": 118,
+    "text": "Levodopa converts to dopamine in brain, providing most effective Parkinson's symptom relief."
+  },
+  "119": {
+    "partition_idx": 0,
+    "local_idx": 119,
+    "text": "Deep brain stimulation electrically modulates brain circuits, reducing Parkinson's motor symptoms."
+  },
+  "120": {
+    "partition_idx": 0,
+    "local_idx": 120,
+    "text": "Multiple sclerosis involves autoimmune attack on nerve myelin, disrupting signal transmission."
+  },
+  "121": {
+    "partition_idx": 0,
+    "local_idx": 121,
+    "text": "MS symptoms vary widely: weakness, numbness, vision problems, balance issues, cognitive changes."
+  },
+  "122": {
+    "partition_idx": 0,
+    "local_idx": 122,
+    "text": "Disease-modifying therapies reduce MS relapses and slow disability progression."
+  },
+  "123": {
+    "partition_idx": 0,
+    "local_idx": 123,
+    "text": "Epilepsy causes recurrent seizures from abnormal brain electrical activity."
+  },
+  "124": {
+    "partition_idx": 0,
+    "local_idx": 124,
+    "text": "Antiepileptic drugs control 70% of epilepsy, working through various brain mechanisms."
+  },
+  "125": {
+    "partition_idx": 0,
+    "local_idx": 125,
+    "text": "Status epilepticus is prolonged seizure requiring emergency treatment to prevent brain damage."
+  },
+  "126": {
+    "partition_idx": 0,
+    "local_idx": 126,
+    "text": "Stroke symptoms require immediate emergency care to minimize permanent brain damage."
+  },
+  "127": {
+    "partition_idx": 0,
+    "local_idx": 127,
+    "text": "TIA (transient ischemic attack) causes temporary stroke-like symptoms, warning of high stroke risk."
+  },
+  "128": {
+    "partition_idx": 0,
+    "local_idx": 128,
+    "text": "Migraine causes severe headache with nausea and light sensitivity, often disabling."
+  },
+  "129": {
+    "partition_idx": 0,
+    "local_idx": 129,
+    "text": "Triptans are effective migraine-specific medications, constricting blood vessels and blocking pain."
+  },
+  "130": {
+    "partition_idx": 0,
+    "local_idx": 130,
+    "text": "Tension headache is most common headache type, caused by muscle tension and stress."
+  },
+  "131": {
+    "partition_idx": 0,
+    "local_idx": 131,
+    "text": "Dementia is general term for cognitive decline severe enough to interfere with daily life."
+  },
+  "132": {
+    "partition_idx": 0,
+    "local_idx": 132,
+    "text": "Vascular dementia results from reduced blood flow to brain, often following strokes."
+  },
+  "133": {
+    "partition_idx": 0,
+    "local_idx": 133,
+    "text": "Peripheral neuropathy damages peripheral nerves, causing numbness, tingling, and pain in extremities."
+  },
+  "134": {
+    "partition_idx": 0,
+    "local_idx": 134,
+    "text": "Carpal tunnel syndrome causes hand numbness from median nerve compression in wrist."
+  },
+  "135": {
+    "partition_idx": 0,
+    "local_idx": 135,
+    "text": "Sciatica causes leg pain from sciatic nerve compression, often from herniated disc."
+  },
+  "136": {
+    "partition_idx": 0,
+    "local_idx": 136,
+    "text": "Concussion is mild traumatic brain injury requiring rest and gradual return to activity."
+  },
+  "137": {
+    "partition_idx": 0,
+    "local_idx": 137,
+    "text": "Meningitis inflames brain and spinal cord membranes, requiring urgent medical treatment."
+  },
+  "138": {
+    "partition_idx": 0,
+    "local_idx": 138,
+    "text": "Brain imaging with CT or MRI helps diagnose stroke, tumors, and structural abnormalities."
+  },
+  "139": {
+    "partition_idx": 0,
+    "local_idx": 139,
+    "text": "Cognitive behavioral therapy is effective treatment for many neurological and psychiatric conditions."
+  },
+  "140": {
+    "partition_idx": 0,
+    "local_idx": 140,
+    "text": "Cancer develops when cells acquire mutations enabling uncontrolled growth and spread."
+  },
+  "141": {
+    "partition_idx": 0,
+    "local_idx": 141,
+    "text": "Breast cancer is most common cancer in women, with 1 in 8 lifetime risk."
+  },
+  "142": {
+    "partition_idx": 0,
+    "local_idx": 142,
+    "text": "Mammography screening detects breast cancer early when treatment is most effective."
+  },
+  "143": {
+    "partition_idx": 0,
+    "local_idx": 143,
+    "text": "BRCA1 and BRCA2 mutations greatly increase breast and ovarian cancer risk."
+  },
+  "144": {
+    "partition_idx": 0,
+    "local_idx": 144,
+    "text": "Lung cancer is leading cancer killer, strongly associated with cigarette smoking."
+  },
+  "145": {
+    "partition_idx": 0,
+    "local_idx": 145,
+    "text": "Lung cancer screening with low-dose CT reduces mortality in high-risk smokers."
+  },
+  "146": {
+    "partition_idx": 0,
+    "local_idx": 146,
+    "text": "Colorectal cancer develops from polyps over years, making screening highly effective."
+  },
+  "147": {
+    "partition_idx": 0,
+    "local_idx": 147,
+    "text": "Colonoscopy finds and removes precancerous polyps, preventing colorectal cancer development."
+  },
+  "148": {
+    "partition_idx": 0,
+    "local_idx": 148,
+    "text": "Prostate cancer is most common cancer in men, typically slow-growing."
+  },
+  "149": {
+    "partition_idx": 0,
+    "local_idx": 149,
+    "text": "PSA screening for prostate cancer is controversial, requiring informed individual decisions."
+  },
+  "150": {
+    "partition_idx": 0,
+    "local_idx": 150,
+    "text": "Skin cancer is most common cancer type, with basal cell carcinoma most frequent."
+  },
+  "151": {
+    "partition_idx": 0,
+    "local_idx": 151,
+    "text": "Melanoma is most dangerous skin cancer, potentially deadly but curable when caught early."
+  },
+  "152": {
+    "partition_idx": 0,
+    "local_idx": 152,
+    "text": "ABCDE rule identifies melanoma: Asymmetry, Border, Color, Diameter, Evolution."
+  },
+  "153": {
+    "partition_idx": 0,
+    "local_idx": 153,
+    "text": "Sun protection through sunscreen, protective clothing reduces skin cancer risk significantly."
+  },
+  "154": {
+    "partition_idx": 0,
+    "local_idx": 154,
+    "text": "Leukemia is cancer of blood-forming tissues, causing abnormal white blood cell production."
+  },
+  "155": {
+    "partition_idx": 0,
+    "local_idx": 155,
+    "text": "Lymphoma is cancer of lymphatic system, divided into Hodgkin and non-Hodgkin types."
+  },
+  "156": {
+    "partition_idx": 0,
+    "local_idx": 156,
+    "text": "Hodgkin lymphoma is highly curable with chemotherapy and radiation, even in advanced stages."
+  },
+  "157": {
+    "partition_idx": 0,
+    "local_idx": 157,
+    "text": "Pancreatic cancer has poor prognosis due to late detection and aggressive biology."
+  },
+  "158": {
+    "partition_idx": 0,
+    "local_idx": 158,
+    "text": "Ovarian cancer often presents with vague symptoms, frequently diagnosed at advanced stage."
+  },
+  "159": {
+    "partition_idx": 0,
+    "local_idx": 159,
+    "text": "Cervical cancer is preventable through HPV vaccination and regular Pap test screening."
+  },
+  "160": {
+    "partition_idx": 0,
+    "local_idx": 160,
+    "text": "HPV causes most cervical cancers, with types 16 and 18 most oncogenic."
+  },
+  "161": {
+    "partition_idx": 0,
+    "local_idx": 161,
+    "text": "Chemotherapy kills rapidly dividing cells, affecting cancer and causing side effects."
+  },
+  "162": {
+    "partition_idx": 0,
+    "local_idx": 162,
+    "text": "Radiation therapy damages cancer cell DNA, causing death after accumulation of damage."
+  },
+  "163": {
+    "partition_idx": 0,
+    "local_idx": 163,
+    "text": "Immunotherapy harnesses immune system to fight cancer, producing durable responses."
+  },
+  "164": {
+    "partition_idx": 0,
+    "local_idx": 164,
+    "text": "Targeted therapy exploits specific cancer cell vulnerabilities with fewer side effects."
+  },
+  "165": {
+    "partition_idx": 0,
+    "local_idx": 165,
+    "text": "Bone marrow transplant can cure some leukemias by replacing cancerous cells."
+  },
+  "166": {
+    "partition_idx": 0,
+    "local_idx": 166,
+    "text": "Cancer staging guides treatment, ranging from localized disease to distant metastases."
+  },
+  "167": {
+    "partition_idx": 0,
+    "local_idx": 167,
+    "text": "Palliative care improves quality of life for cancer patients through symptom management."
+  },
+  "168": {
+    "partition_idx": 0,
+    "local_idx": 168,
+    "text": "Cancer survivors require long-term follow-up for recurrence detection and late effects."
+  },
+  "169": {
+    "partition_idx": 0,
+    "local_idx": 169,
+    "text": "Clinical trials test new cancer treatments, offering access to cutting-edge therapies."
+  },
+  "170": {
+    "partition_idx": 0,
+    "local_idx": 170,
+    "text": "Influenza virus causes seasonal respiratory illness, preventable with annual vaccination."
+  },
+  "171": {
+    "partition_idx": 0,
+    "local_idx": 171,
+    "text": "Flu complications include pneumonia, myocarditis, and can be life-threatening."
+  },
+  "172": {
+    "partition_idx": 0,
+    "local_idx": 172,
+    "text": "Antiviral medications like oseltamivir reduce flu duration if started within 48 hours."
+  },
+  "173": {
+    "partition_idx": 0,
+    "local_idx": 173,
+    "text": "COVID-19 is caused by SARS-CoV-2 virus, spreading primarily through respiratory droplets."
+  },
+  "174": {
+    "partition_idx": 0,
+    "local_idx": 174,
+    "text": "COVID-19 vaccines dramatically reduce infection severity, hospitalization, and death."
+  },
+  "175": {
+    "partition_idx": 0,
+    "local_idx": 175,
+    "text": "Long COVID causes persistent symptoms including fatigue, brain fog, lasting months."
+  },
+  "176": {
+    "partition_idx": 0,
+    "local_idx": 176,
+    "text": "HIV attacks immune system CD4 cells, progressively weakening body's defenses."
+  },
+  "177": {
+    "partition_idx": 0,
+    "local_idx": 177,
+    "text": "AIDS is advanced HIV disease with CD4 count below 200 or opportunistic infections."
+  },
+  "178": {
+    "partition_idx": 0,
+    "local_idx": 178,
+    "text": "Antiretroviral therapy suppresses HIV replication, preventing AIDS and transmission."
+  },
+  "179": {
+    "partition_idx": 0,
+    "local_idx": 179,
+    "text": "Undetectable HIV viral load means virus cannot be transmitted sexually (U=U)."
+  },
+  "180": {
+    "partition_idx": 0,
+    "local_idx": 180,
+    "text": "Pre-exposure prophylaxis (PrEP) prevents HIV acquisition in high-risk individuals."
+  },
+  "181": {
+    "partition_idx": 0,
+    "local_idx": 181,
+    "text": "Hepatitis B transmits through blood and body fluids, vaccine-preventable, can become chronic."
+  },
+  "182": {
+    "partition_idx": 0,
+    "local_idx": 182,
+    "text": "Chronic hepatitis B can cause cirrhosis and liver cancer, treatable with antivirals."
+  },
+  "183": {
+    "partition_idx": 0,
+    "local_idx": 183,
+    "text": "Hepatitis C transmits through blood, often chronic, now curable with direct-acting antivirals."
+  },
+  "184": {
+    "partition_idx": 0,
+    "local_idx": 184,
+    "text": "Tuberculosis spreads through airborne droplets, requiring prolonged multi-drug treatment."
+  },
+  "185": {
+    "partition_idx": 0,
+    "local_idx": 185,
+    "text": "Malaria is transmitted by mosquitoes, causing 400,000 deaths annually, mostly in Africa."
+  },
+  "186": {
+    "partition_idx": 0,
+    "local_idx": 186,
+    "text": "Lyme disease is transmitted by deer ticks, causing rash and systemic symptoms."
+  },
+  "187": {
+    "partition_idx": 0,
+    "local_idx": 187,
+    "text": "Sexually transmitted infections are rising, requiring screening and treatment to prevent complications."
+  },
+  "188": {
+    "partition_idx": 0,
+    "local_idx": 188,
+    "text": "Chlamydia and gonorrhea are curable but often asymptomatic, causing infertility if untreated."
+  },
+  "189": {
+    "partition_idx": 0,
+    "local_idx": 189,
+    "text": "Syphilis progresses through stages if untreated, potentially causing severe complications."
+  },
+  "190": {
+    "partition_idx": 0,
+    "local_idx": 190,
+    "text": "HPV vaccine prevents genital warts and cancers, most effective before sexual debut."
+  },
+  "191": {
+    "partition_idx": 0,
+    "local_idx": 191,
+    "text": "Urinary tract infections are common in women, causing dysuria, frequency, and urgency."
+  },
+  "192": {
+    "partition_idx": 0,
+    "local_idx": 192,
+    "text": "Antibiotic resistance is growing threat, necessitating appropriate antibiotic use."
+  },
+  "193": {
+    "partition_idx": 0,
+    "local_idx": 193,
+    "text": "C. difficile colitis causes severe diarrhea after antibiotics disrupt normal gut flora."
+  },
+  "194": {
+    "partition_idx": 0,
+    "local_idx": 194,
+    "text": "MRSA is antibiotic-resistant staph causing difficult-to-treat skin and invasive infections."
+  },
+  "195": {
+    "partition_idx": 0,
+    "local_idx": 195,
+    "text": "Sepsis is dysregulated immune response to infection causing organ dysfunction."
+  },
+  "196": {
+    "partition_idx": 0,
+    "local_idx": 196,
+    "text": "Early sepsis recognition and treatment with antibiotics and fluids improves survival."
+  },
+  "197": {
+    "partition_idx": 0,
+    "local_idx": 197,
+    "text": "Vaccination has eliminated or controlled many infectious diseases, saving millions of lives."
+  },
+  "198": {
+    "partition_idx": 0,
+    "local_idx": 198,
+    "text": "Hand hygiene is single most important infection prevention measure."
+  },
+  "199": {
+    "partition_idx": 0,
+    "local_idx": 199,
+    "text": "Respiratory etiquette including covering coughs reduces respiratory infection transmission."
+  },
+  "200": {
+    "partition_idx": 0,
+    "local_idx": 200,
+    "text": "Major depression affects 21 million US adults, causing persistent sadness and loss of interest."
+  },
+  "201": {
+    "partition_idx": 0,
+    "local_idx": 201,
+    "text": "Depression symptoms include depressed mood, anhedonia, sleep changes, and guilt."
+  },
+  "202": {
+    "partition_idx": 0,
+    "local_idx": 202,
+    "text": "SSRIs are first-line antidepressants with favorable side effect profile."
+  },
+  "203": {
+    "partition_idx": 0,
+    "local_idx": 203,
+    "text": "Cognitive behavioral therapy changes negative thought patterns causing depression."
+  },
+  "204": {
+    "partition_idx": 0,
+    "local_idx": 204,
+    "text": "Electroconvulsive therapy induces controlled seizure, highly effective for severe depression."
+  },
+  "205": {
+    "partition_idx": 0,
+    "local_idx": 205,
+    "text": "Depression increases heart disease, stroke, and dementia risk through multiple pathways."
+  },
+  "206": {
+    "partition_idx": 0,
+    "local_idx": 206,
+    "text": "Anxiety disorders affect 40 million Americans, causing excessive worry interfering with life."
+  },
+  "207": {
+    "partition_idx": 0,
+    "local_idx": 207,
+    "text": "Generalized anxiety disorder involves persistent excessive worry about multiple life areas."
+  },
+  "208": {
+    "partition_idx": 0,
+    "local_idx": 208,
+    "text": "Panic disorder causes recurrent unexpected panic attacks with intense fear."
+  },
+  "209": {
+    "partition_idx": 0,
+    "local_idx": 209,
+    "text": "Social anxiety disorder involves intense fear of social situations and negative evaluation."
+  },
+  "210": {
+    "partition_idx": 0,
+    "local_idx": 210,
+    "text": "Exposure therapy systematically confronts feared situations, highly effective for anxiety."
+  },
+  "211": {
+    "partition_idx": 0,
+    "local_idx": 211,
+    "text": "Bipolar disorder causes extreme mood swings between manic highs and depressive lows."
+  },
+  "212": {
+    "partition_idx": 0,
+    "local_idx": 212,
+    "text": "Mood stabilizers like lithium prevent bipolar mood episodes and reduce suicide risk."
+  },
+  "213": {
+    "partition_idx": 0,
+    "local_idx": 213,
+    "text": "Schizophrenia affects thinking and perception, often involving delusions and hallucinations."
+  },
+  "214": {
+    "partition_idx": 0,
+    "local_idx": 214,
+    "text": "Antipsychotic medications treat schizophrenia by modulating dopamine and other neurotransmitters."
+  },
+  "215": {
+    "partition_idx": 0,
+    "local_idx": 215,
+    "text": "PTSD develops after trauma exposure, causing intrusive memories and hyperarousal."
+  },
+  "216": {
+    "partition_idx": 0,
+    "local_idx": 216,
+    "text": "Trauma-focused therapies like prolonged exposure are first-line PTSD treatments."
+  },
+  "217": {
+    "partition_idx": 0,
+    "local_idx": 217,
+    "text": "OCD involves unwanted intrusive thoughts (obsessions) and repetitive behaviors (compulsions)."
+  },
+  "218": {
+    "partition_idx": 0,
+    "local_idx": 218,
+    "text": "Exposure and response prevention is gold-standard OCD treatment."
+  },
+  "219": {
+    "partition_idx": 0,
+    "local_idx": 219,
+    "text": "ADHD affects 8% of children and 4% of adults, characterized by inattention and impulsivity."
+  },
+  "220": {
+    "partition_idx": 0,
+    "local_idx": 220,
+    "text": "Stimulant medications like methylphenidate are first-line ADHD treatment."
+  },
+  "221": {
+    "partition_idx": 0,
+    "local_idx": 221,
+    "text": "Eating disorders include anorexia, bulimia, and binge eating disorder."
+  },
+  "222": {
+    "partition_idx": 0,
+    "local_idx": 222,
+    "text": "Anorexia nervosa involves restrictive eating and distorted body image."
+  },
+  "223": {
+    "partition_idx": 0,
+    "local_idx": 223,
+    "text": "Eating disorders have highest mortality of psychiatric conditions."
+  },
+  "224": {
+    "partition_idx": 0,
+    "local_idx": 224,
+    "text": "Substance use disorders involve compulsive drug use despite harmful consequences."
+  },
+  "225": {
+    "partition_idx": 0,
+    "local_idx": 225,
+    "text": "Medication-assisted treatment combines therapy with medications for addiction."
+  },
+  "226": {
+    "partition_idx": 0,
+    "local_idx": 226,
+    "text": "Mental health stigma prevents many from seeking help though conditions are treatable."
+  },
+  "227": {
+    "partition_idx": 0,
+    "local_idx": 227,
+    "text": "Suicide is preventable, with warning signs including hopelessness and withdrawal."
+  },
+  "228": {
+    "partition_idx": 0,
+    "local_idx": 228,
+    "text": "Crisis resources like 988 Suicide Lifeline provide immediate mental health support."
+  },
+  "229": {
+    "partition_idx": 0,
+    "local_idx": 229,
+    "text": "Psychotherapy treats mental health conditions through evidence-based talk therapy approaches."
+  },
+  "230": {
+    "partition_idx": 0,
+    "local_idx": 230,
+    "text": "GERD occurs when stomach acid flows back into esophagus, irritating its lining."
+  },
+  "231": {
+    "partition_idx": 0,
+    "local_idx": 231,
+    "text": "Proton pump inhibitors are most effective GERD medications, healing esophagitis."
+  },
+  "232": {
+    "partition_idx": 0,
+    "local_idx": 232,
+    "text": "Inflammatory bowel disease includes Crohn's disease and ulcerative colitis."
+  },
+  "233": {
+    "partition_idx": 0,
+    "local_idx": 233,
+    "text": "Celiac disease is autoimmune reaction to gluten, requiring strict gluten-free diet."
+  },
+  "234": {
+    "partition_idx": 0,
+    "local_idx": 234,
+    "text": "Cirrhosis is end-stage liver scarring from chronic damage, leading to liver failure."
+  },
+  "235": {
+    "partition_idx": 0,
+    "local_idx": 235,
+    "text": "Non-alcoholic fatty liver disease affects 25% of population, linked to obesity."
+  },
+  "236": {
+    "partition_idx": 0,
+    "local_idx": 236,
+    "text": "Chronic kidney disease is progressive kidney function loss over months to years."
+  },
+  "237": {
+    "partition_idx": 0,
+    "local_idx": 237,
+    "text": "Diabetes and hypertension cause most chronic kidney disease cases."
+  },
+  "238": {
+    "partition_idx": 0,
+    "local_idx": 238,
+    "text": "Dialysis removes waste and excess fluid when kidneys fail."
+  },
+  "239": {
+    "partition_idx": 0,
+    "local_idx": 239,
+    "text": "Kidney transplant is preferred treatment for kidney failure, offering better outcomes than dialysis."
+  },
+  "240": {
+    "partition_idx": 0,
+    "local_idx": 240,
+    "text": "Acute kidney injury is sudden kidney failure, often reversible if treated promptly."
+  },
+  "241": {
+    "partition_idx": 0,
+    "local_idx": 241,
+    "text": "Urinary tract infections cause dysuria and frequency, treated with antibiotics."
+  },
+  "242": {
+    "partition_idx": 0,
+    "local_idx": 242,
+    "text": "Kidney stones form from mineral crystallization, causing severe pain when passing."
+  },
+  "243": {
+    "partition_idx": 0,
+    "local_idx": 243,
+    "text": "Osteoarthritis is cartilage breakdown from wear and tear, causing joint pain and stiffness."
+  },
+  "244": {
+    "partition_idx": 0,
+    "local_idx": 244,
+    "text": "Rheumatoid arthritis is autoimmune joint inflammation, treated with disease-modifying drugs."
+  },
+  "245": {
+    "partition_idx": 0,
+    "local_idx": 245,
+    "text": "Osteoporosis weakens bones through decreased density, dramatically increasing fracture risk."
+  },
+  "246": {
+    "partition_idx": 0,
+    "local_idx": 246,
+    "text": "DEXA scan measures bone density, diagnosing osteoporosis and assessing fracture risk."
+  },
+  "247": {
+    "partition_idx": 0,
+    "local_idx": 247,
+    "text": "Bisphosphonates are first-line osteoporosis drugs, reducing fracture risk."
+  },
+  "248": {
+    "partition_idx": 0,
+    "local_idx": 248,
+    "text": "Gout causes sudden severe joint pain from uric acid crystal deposition."
+  },
+  "249": {
+    "partition_idx": 0,
+    "local_idx": 249,
+    "text": "Back pain affects 80% of people during lifetime, usually self-limiting."
+  },
+  "250": {
+    "partition_idx": 0,
+    "local_idx": 250,
+    "text": "Herniated disc causes pain when disc material compresses nerve root."
+  },
+  "251": {
+    "partition_idx": 0,
+    "local_idx": 251,
+    "text": "Physical therapy helps restore movement and function after musculoskeletal injury."
+  },
+  "252": {
+    "partition_idx": 0,
+    "local_idx": 252,
+    "text": "Hip replacement surgery treats severe arthritis and joint damage."
+  },
+  "253": {
+    "partition_idx": 0,
+    "local_idx": 253,
+    "text": "Knee replacement surgery provides pain relief and improved function for severe arthritis."
+  },
+  "254": {
+    "partition_idx": 0,
+    "local_idx": 254,
+    "text": "Fibromyalgia causes widespread musculoskeletal pain, fatigue, and sleep problems."
+  },
+  "255": {
+    "partition_idx": 0,
+    "local_idx": 255,
+    "text": "Carpal tunnel syndrome causes hand numbness from median nerve compression."
+  },
+  "256": {
+    "partition_idx": 0,
+    "local_idx": 256,
+    "text": "Rotator cuff tears cause shoulder pain and weakness, common in older adults."
+  },
+  "257": {
+    "partition_idx": 0,
+    "local_idx": 257,
+    "text": "Stress fractures result from repetitive force, common in runners and athletes."
+  },
+  "258": {
+    "partition_idx": 0,
+    "local_idx": 258,
+    "text": "Tendinitis is inflammation of tendon, causing pain and limited movement."
+  },
+  "259": {
+    "partition_idx": 0,
+    "local_idx": 259,
+    "text": "Plantar fasciitis causes heel pain from inflammation of foot arch ligament."
+  },
+  "260": {
+    "partition_idx": 0,
+    "local_idx": 260,
+    "text": "Pregnancy involves 40 weeks of fetal development divided into three trimesters."
+  },
+  "261": {
+    "partition_idx": 0,
+    "local_idx": 261,
+    "text": "Prenatal care includes regular checkups monitoring mother and baby's health."
+  },
+  "262": {
+    "partition_idx": 0,
+    "local_idx": 262,
+    "text": "Folic acid supplementation before conception prevents neural tube defects."
+  },
+  "263": {
+    "partition_idx": 0,
+    "local_idx": 263,
+    "text": "Gestational diabetes screening occurs at 24-28 weeks, requiring glucose control."
+  },
+  "264": {
+    "partition_idx": 0,
+    "local_idx": 264,
+    "text": "Preeclampsia causes hypertension and organ dysfunction after 20 weeks."
+  },
+  "265": {
+    "partition_idx": 0,
+    "local_idx": 265,
+    "text": "Breastfeeding provides optimal infant nutrition and maternal health benefits."
+  },
+  "266": {
+    "partition_idx": 0,
+    "local_idx": 266,
+    "text": "Postpartum depression affects 1 in 7 women, requiring recognition and treatment."
+  },
+  "267": {
+    "partition_idx": 0,
+    "local_idx": 267,
+    "text": "Contraception options include hormonal methods, IUDs, barrier methods, and sterilization."
+  },
+  "268": {
+    "partition_idx": 0,
+    "local_idx": 268,
+    "text": "Menopause transition brings hormonal changes causing hot flashes and bone loss."
+  },
+  "269": {
+    "partition_idx": 0,
+    "local_idx": 269,
+    "text": "Cervical cancer screening with Pap tests prevents cancer through early detection."
+  },
+  "270": {
+    "partition_idx": 0,
+    "local_idx": 270,
+    "text": "Childhood vaccinations protect against 14 serious diseases following CDC schedule."
+  },
+  "271": {
+    "partition_idx": 0,
+    "local_idx": 271,
+    "text": "Vaccine safety is extensively studied, with benefits far outweighing minimal risks."
+  },
+  "272": {
+    "partition_idx": 0,
+    "local_idx": 272,
+    "text": "Well-child visits monitor growth, development, and provide anticipatory guidance."
+  },
+  "273": {
+    "partition_idx": 0,
+    "local_idx": 273,
+    "text": "Sudden infant death syndrome risk reduced by back sleeping and safe environment."
+  },
+  "274": {
+    "partition_idx": 0,
+    "local_idx": 274,
+    "text": "Autism spectrum disorder varies widely, requiring individualized interventions."
+  },
+  "275": {
+    "partition_idx": 0,
+    "local_idx": 275,
+    "text": "ADHD in children managed with medication, behavioral therapy, and school support."
+  },
+  "276": {
+    "partition_idx": 0,
+    "local_idx": 276,
+    "text": "Childhood obesity prevention includes healthy eating, activity, and limiting screens."
+  },
+  "277": {
+    "partition_idx": 0,
+    "local_idx": 277,
+    "text": "Developmental screening identifies delays enabling early intervention."
+  },
+  "278": {
+    "partition_idx": 0,
+    "local_idx": 278,
+    "text": "Regular exercise reduces risk of chronic diseases and improves mental health."
+  },
+  "279": {
+    "partition_idx": 0,
+    "local_idx": 279,
+    "text": "Balanced diet supports overall health and disease prevention."
+  },
+  "280": {
+    "partition_idx": 0,
+    "local_idx": 280,
+    "text": "Smoking cessation dramatically reduces risk of cancer, heart disease, and stroke."
+  },
+  "281": {
+    "partition_idx": 0,
+    "local_idx": 281,
+    "text": "Adequate sleep 7-9 hours nightly is essential for physical and mental health."
+  },
+  "282": {
+    "partition_idx": 0,
+    "local_idx": 282,
+    "text": "Stress management through meditation and exercise improves health outcomes."
+  },
+  "283": {
+    "partition_idx": 0,
+    "local_idx": 283,
+    "text": "Preventive care includes regular health screenings and vaccinations."
+  },
+  "284": {
+    "partition_idx": 0,
+    "local_idx": 284,
+    "text": "Blood pressure should be checked at least every 2 years starting at age 18."
+  },
+  "285": {
+    "partition_idx": 0,
+    "local_idx": 285,
+    "text": "Cholesterol screening recommended starting at age 35 for men, 45 for women."
+  },
+  "286": {
+    "partition_idx": 0,
+    "local_idx": 286,
+    "text": "Colorectal cancer screening should begin at age 45 for average-risk individuals."
+  },
+  "287": {
+    "partition_idx": 0,
+    "local_idx": 287,
+    "text": "Mammography screening for breast cancer typically begins at age 40-50."
+  },
+  "288": {
+    "partition_idx": 0,
+    "local_idx": 288,
+    "text": "Bone density screening for osteoporosis recommended for women at age 65."
+  },
+  "289": {
+    "partition_idx": 0,
+    "local_idx": 289,
+    "text": "Annual flu vaccination recommended for everyone 6 months and older."
+  },
+  "290": {
+    "partition_idx": 0,
+    "local_idx": 290,
+    "text": "Healthy lifestyle habits prevent up to 80% of premature heart disease and stroke."
+  },
+  "291": {
+    "partition_idx": 0,
+    "local_idx": 291,
+    "text": "Regular primary care visits enable early disease detection and management."
+  },
+  "292": {
+    "partition_idx": 0,
+    "local_idx": 292,
+    "text": "Health insurance coverage improves access to preventive and treatment services."
+  },
+  "293": {
+    "partition_idx": 0,
+    "local_idx": 293,
+    "text": "Advance care planning documents healthcare preferences for future decision-making."
+  },
+  "294": {
+    "partition_idx": 0,
+    "local_idx": 294,
+    "text": "Living will specifies end-of-life medical treatment preferences."
+  },
+  "295": {
+    "partition_idx": 0,
+    "local_idx": 295,
+    "text": "Healthcare proxy designates someone to make medical decisions if unable."
+  },
+  "296": {
+    "partition_idx": 0,
+    "local_idx": 296,
+    "text": "Telemedicine provides healthcare remotely using technology, improving access."
+  },
+  "297": {
+    "partition_idx": 0,
+    "local_idx": 297,
+    "text": "Electronic health records store patient information digitally, improving care coordination."
+  },
+  "298": {
+    "partition_idx": 0,
+    "local_idx": 298,
+    "text": "Patient privacy is protected by HIPAA regulations in healthcare settings."
+  },
+  "299": {
+    "partition_idx": 0,
+    "local_idx": 299,
+    "text": "Informed consent ensures patients understand treatment risks and benefits before proceeding."
+  }
+}

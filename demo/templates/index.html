@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical RAG - Hybrid VDB Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .panel h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .query-box {
+            grid-column: 1 / -1;
+        }
+
+        #question {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-family: inherit;
+        }
+
+        #question:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        #askButton {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        #askButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        #askButton:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .answer-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            line-height: 1.6;
+            min-height: 150px;
+        }
+
+        .flow-step {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .flow-step.hit {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+
+        .flow-step.miss {
+            border-left-color: #ffc107;
+            background: #fff3cd;
+        }
+
+        .flow-step-name {
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .flow-step-time {
+            color: #666;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        .flow-step-detail {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .metric-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .status-local {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cloud {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .examples {
+            margin-top: 15px;
+        }
+
+        .example-query {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+
+        .example-query:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .retrieved-docs {
+            margin-top: 15px;
+        }
+
+        .doc-card {
+            background: #f8f9fa;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metric-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Medical RAG System</h1>
+            <p>Hybrid Vector Database with Anchor-Based Predictive Learning</p>
+        </div>
+
+        <div class="main-grid">
+            <!-- Query Input -->
+            <div class="panel query-box">
+                <h2>Ask a Medical Question</h2>
+                <input 
+                    type="text" 
+                    id="question" 
+                    placeholder="E.g., What is hypertension?"
+                    autocomplete="off"
+                />
+                <button id="askButton" onclick="askQuestion()">Ask Question</button>
+                
+                <div class="examples">
+                    <strong>Try these:</strong><br>
+                    <span class="example-query" onclick="setExample('What is hypertension?')">What is hypertension?</span>
+                    <span class="example-query" onclick="setExample('What causes diabetes?')">What causes diabetes?</span>
+                    <span class="example-query" onclick="setExample('How to treat asthma?')">How to treat asthma?</span>
+                    <span class="example-query" onclick="setExample('What are symptoms of heart attack?')">Heart attack symptoms</span>
+                </div>
+            </div>
+
+            <!-- Answer -->
+            <div class="panel">
+                <h2>💬 Answer</h2>
+                <div class="loading" id="answerLoading">
+                    <div class="spinner"></div>
+                    <p>Generating answer...</p>
+                </div>
+                <div class="answer-section" id="answer">
+                    Ask a medical question to see the AI-powered answer using RAG with Llama 3.2.
+                </div>
+                <div class="retrieved-docs" id="retrievedDocs"></div>
+            </div>
+
+            <!-- Flow Visualization -->
+            <div class="panel">
+                <h2>🔄 Data Flow Visualization</h2>
+                <div class="loading" id="flowLoading">
+                    <div class="spinner"></div>
+                    <p>Processing query...</p>
+                </div>
+                <div id="flowSteps">
+                    Query flow will appear here after asking a question.
+                </div>
+            </div>
+
+            <!-- Live Metrics -->
+            <div class="panel">
+                <h2>📊 Live Metrics</h2>
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <div class="metric-value" id="totalQueries">0</div>
+                        <div class="metric-label">Total Queries</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="hitRate">0%</div>
+                        <div class="metric-label">Local Hit Rate</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="predAccuracy">0%</div>
+                        <div class="metric-label">Prediction Accuracy</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="avgLatency">0ms</div>
+                        <div class="metric-label">Avg Latency</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="anchorCount">0</div>
+                        <div class="metric-label">Active Anchors</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="lastSource">-</div>
+                        <div class="metric-label">Last Source</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setExample(text) {
+            document.getElementById('question').value = text;
+        }
+
+        async function askQuestion() {
+            const question = document.getElementById('question').value.trim();
+            
+            if (!question) {
+                alert('Please enter a question');
+                return;
+            }
+
+            // Disable button
+            const button = document.getElementById('askButton');
+            button.disabled = true;
+            button.textContent = 'Processing...';
+
+            // Show loading states
+            document.getElementById('answerLoading').classList.add('active');
+            document.getElementById('flowLoading').classList.add('active');
+            document.getElementById('answer').textContent = '';
+            document.getElementById('flowSteps').textContent = '';
+            document.getElementById('retrievedDocs').innerHTML = '';
+
+            try {
+                const response = await fetch('/api/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    document.getElementById('answer').textContent = '❌ Error: ' + data.error;
+                } else {
+                    // Display answer
+                    document.getElementById('answer').textContent = data.answer;
+
+                    // Display retrieved documents
+                    if (data.retrieved_docs && data.retrieved_docs.length > 0) {
+                        let docsHTML = '<h3 style="margin-top: 15px; font-size: 1em; color: #666;">📚 Retrieved Context:</h3>';
+                        data.retrieved_docs.forEach((doc, i) => {
+                            docsHTML += `<div class="doc-card">${doc.substring(0, 200)}...</div>`;
+                        });
+                        document.getElementById('retrievedDocs').innerHTML = docsHTML;
+                    }
+
+                    // Display flow
+                    let flowHTML = '';
+                    data.flow.forEach(step => {
+                        const statusClass = step.status === 'hit' ? 'hit' : (step.status === 'miss' ? 'miss' : '');
+                        flowHTML += `
+                            <div class="flow-step ${statusClass}">
+                                <div>
+                                    <div class="flow-step-name">${step.step}. ${step.name}</div>
+                                    ${step.detail ? `<div class="flow-step-detail">${step.detail}</div>` : ''}
+                                </div>
+                                <div class="flow-step-time">${step.time_ms}ms</div>
+                            </div>
+                        `;
+                    });
+                    document.getElementById('flowSteps').innerHTML = flowHTML;
+
+                    // Update metrics
+                    const m = data.metrics;
+                    document.getElementById('totalQueries').textContent = m.total_queries;
+                    document.getElementById('hitRate').textContent = m.local_hit_rate + '%';
+                    document.getElementById('predAccuracy').textContent = m.prediction_accuracy + '%';
+                    document.getElementById('avgLatency').textContent = m.avg_latency_ms + 'ms';
+                    document.getElementById('anchorCount').textContent = m.anchor_count;
+                    
+                    const sourceEl = document.getElementById('lastSource');
+                    sourceEl.textContent = m.source.toUpperCase();
+                    sourceEl.className = 'metric-value status-' + m.source;
+                }
+
+            } catch (error) {
+                document.getElementById('answer').textContent = '❌ Error: ' + error.message;
+            } finally {
+                // Hide loading, enable button
+                document.getElementById('answerLoading').classList.remove('active');
+                document.getElementById('flowLoading').classList.remove('active');
+                button.disabled = false;
+                button.textContent = 'Ask Question';
+            }
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('question').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                askQuestion();
+            }
+        });
+    </script>
+</body>
+</html>
