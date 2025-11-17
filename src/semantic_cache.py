@@ -1,28 +1,31 @@
 # src/semantic_cache.py
 """
-Semantic Cluster Cache with Momentum-Based Context Management.
+Semantic Cache - Momentum-Based Clustering
 
-Instead of caching individual queries, we cache SEMANTIC REGIONS:
-- Cluster centroids represent active topics/contexts
-- Momentum-based updates prevent false context shifts
-- Drift detection creates new clusters when topics change
-- Cluster-level eviction maintains semantic coherence
+Manages semantic clusters with momentum-based centroid updates.
+Prevents noise from fragmenting clusters while adapting to genuine drift.
+
+Key Features:
+- Momentum-based centroid updates (smooth transitions)
+- Semantic drift detection (new cluster creation)
+- Cluster reinforcement (access tracking)
+- TTL-based eviction (remove stale clusters)
 
 Author: Saberzerker
-Date: 2025-11-16
+Date: 2025-11-17
 """
 
 import numpy as np
 import time
 import logging
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional, Tuple, List
 
 from src.config import (
     SEMANTIC_DRIFT_THRESHOLD,
     MOMENTUM_ALPHA,
-    MAX_CLUSTERS,
+    MIN_CLUSTER_REINFORCEMENT_SCORE,
     CLUSTER_TTL_SECONDS,
-    MIN_CLUSTER_REINFORCEMENT_SCORE
+    CLUSTER_MIN_ACCESS_COUNT
 )
 
 logger = logging.getLogger(__name__)
@@ -30,314 +33,292 @@ logger = logging.getLogger(__name__)
 
 class SemanticClusterCache:
     """
-    Manages semantic clusters for context-aware caching.
+    Manages semantic clusters with momentum-based updates.
     
-    Key Innovation:
-    - Clusters represent semantic regions, not individual queries
-    - Centroids updated with momentum to resist noise
-    - New clusters created only on genuine semantic drift
-    - Cluster eviction preserves semantic neighborhoods
+    Each cluster represents a "topic" or "semantic region":
+    - Centroid: Weighted average of queries in this region
+    - Access count: How often queries fall in this cluster
+    - Created/accessed timestamps: For TTL eviction
+    - Query IDs: Track which queries belong to cluster
+    
+    Momentum prevents noise:
+    - Single off-topic query doesn't destroy cluster
+    - Centroid shifts gradually toward genuine changes
+    - Resistance to false drift
     """
     
-    def __init__(self, drift_threshold: float = None, momentum_alpha: float = None, 
-                 max_clusters: int = None):
-        """
-        Initialize semantic cache.
-        
-        Args:
-            drift_threshold: Cosine distance threshold for creating new clusters
-            momentum_alpha: Weight for old centroid in momentum update (0-1)
-            max_clusters: Maximum number of clusters to maintain
-        """
-        self.drift_threshold = drift_threshold or SEMANTIC_DRIFT_THRESHOLD
-        self.momentum_alpha = momentum_alpha or MOMENTUM_ALPHA
-        self.max_clusters = max_clusters or MAX_CLUSTERS
-        
+    def __init__(self):
+        """Initialize semantic cache."""
         self.clusters = {}  # {cluster_id: cluster_metadata}
         self.cluster_counter = 0
         self.query_to_cluster = {}  # {query_id: cluster_id}
         
-        # Metrics
-        self.metrics = {
-            "clusters_created": 0,
-            "clusters_merged": 0,
-            "clusters_evicted": 0,
-            "drift_events": 0,
-            "reinforcements": 0
-        }
-        
-        logger.info(f"[SEMANTIC CACHE] Initialized (drift_threshold={self.drift_threshold}, "
-                   f"momentum_alpha={self.momentum_alpha})")
+        logger.info("[SEMANTIC] Initialized semantic cache")
+        logger.info(f"[SEMANTIC] Drift threshold: {SEMANTIC_DRIFT_THRESHOLD}")
+        logger.info(f"[SEMANTIC] Momentum alpha: {MOMENTUM_ALPHA}")
     
-    def add_query(self, query_vector: np.ndarray, query_id: str) -> Tuple[int, str, int]:
+    def add_query(
+        self,
+        query_vector: np.ndarray,
+        query_id: str
+    ) -> Tuple[int, str, int]:
         """
-        Add query to semantic cache with momentum-based clustering.
+        Add query to semantic cache.
+        
+        Flow:
+        1. Find nearest cluster
+        2. If close enough (< drift threshold): Reinforce cluster
+        3. If too far: Create new cluster (drift detected)
         
         Args:
-            query_vector: Query embedding (normalized)
-            query_id: Query identifier
+            query_vector: Query embedding (384-dim)
+            query_id: Unique query identifier
         
         Returns:
-            Tuple of (cluster_id, action, access_count)
-            - cluster_id: Assigned cluster ID
-            - action: "new_cluster" | "reinforced" | "drift_detected"
-            - access_count: Current cluster access count
+            (cluster_id, action, access_count)
+            
+            action values:
+            - "new_cluster": First cluster OR drift detected
+            - "reinforced": Added to existing cluster
         """
-        # Find nearest existing cluster
-        nearest_cluster = self._find_nearest_cluster(query_vector)
-        
-        if nearest_cluster is None:
-            # No clusters yet → create first cluster
+        # First query ever?
+        if not self.clusters:
             cluster_id = self._create_cluster(query_vector, query_id)
             return cluster_id, "new_cluster", 1
         
-        cluster_id, distance = nearest_cluster
+        # Find nearest cluster
+        nearest_cluster_id, distance = self._find_nearest_cluster(query_vector)
         
-        if distance < self.drift_threshold:
-            # Query fits in existing cluster → reinforce
-            self._reinforce_cluster(cluster_id, query_vector, query_id)
-            access_count = self.clusters[cluster_id]["access_count"]
-            return cluster_id, "reinforced", access_count
+        if distance < SEMANTIC_DRIFT_THRESHOLD:
+            # REINFORCE existing cluster
+            cluster = self.clusters[nearest_cluster_id]
+            
+            # Momentum-based centroid update
+            # Formula: new_centroid = α * old + (1-α) * new
+            # α=0.9 means 90% old, 10% new (smooth transition)
+            old_centroid = cluster["centroid"]
+            new_centroid = (
+                MOMENTUM_ALPHA * old_centroid + 
+                (1 - MOMENTUM_ALPHA) * query_vector
+            )
+            
+            # Normalize to prevent drift in vector magnitude
+            new_centroid = new_centroid / np.linalg.norm(new_centroid)
+            
+            # Update cluster
+            cluster["centroid"] = new_centroid
+            cluster["last_access"] = time.time()
+            cluster["access_count"] += 1
+            cluster["query_ids"].append(query_id)
+            
+            self.query_to_cluster[query_id] = nearest_cluster_id
+            
+            logger.debug(f"[SEMANTIC] Reinforced cluster {nearest_cluster_id} "
+                        f"(distance={distance:.3f}, access={cluster['access_count']})")
+            
+            return nearest_cluster_id, "reinforced", cluster["access_count"]
         
         else:
-            # Semantic drift detected → create new cluster
-            self.metrics["drift_events"] += 1
-            logger.debug(f"[SEMANTIC] Drift detected (distance={distance:.3f} > {self.drift_threshold})")
-            
-            # Check if we're at max capacity
-            if len(self.clusters) >= self.max_clusters:
-                # Evict least-used cluster to make room
-                self._evict_lru_cluster()
-            
+            # DRIFT DETECTED → Create new cluster
             cluster_id = self._create_cluster(query_vector, query_id)
-            return cluster_id, "drift_detected", 1
+            
+            logger.info(f"[SEMANTIC] Drift detected (distance={distance:.3f} > {SEMANTIC_DRIFT_THRESHOLD})")
+            logger.info(f"[SEMANTIC] Created new cluster {cluster_id}")
+            
+            return cluster_id, "new_cluster", 1
     
-    def _find_nearest_cluster(self, query_vector: np.ndarray) -> Optional[Tuple[int, float]]:
+    def _create_cluster(self, query_vector: np.ndarray, query_id: str) -> int:
         """
-        Find the nearest cluster centroid to query vector.
+        Create new semantic cluster.
         
         Args:
-            query_vector: Query embedding
+            query_vector: Centroid for new cluster
+            query_id: First query in cluster
         
         Returns:
-            (cluster_id, distance) or None if no clusters exist
+            cluster_id: New cluster's ID
         """
-        if not self.clusters:
-            return None
+        cluster_id = self.cluster_counter
+        self.cluster_counter += 1
         
+        # Normalize centroid
+        centroid = query_vector / np.linalg.norm(query_vector)
+        
+        self.clusters[cluster_id] = {
+            "id": cluster_id,
+            "centroid": centroid,
+            "created_at": time.time(),
+            "last_access": time.time(),
+            "access_count": 1,
+            "query_ids": [query_id]
+        }
+        
+        self.query_to_cluster[query_id] = cluster_id
+        
+        logger.info(f"[SEMANTIC] Created cluster {cluster_id}")
+        
+        return cluster_id
+    
+    def _find_nearest_cluster(self, query_vector: np.ndarray) -> Tuple[int, float]:
+        """
+        Find nearest cluster to query vector.
+        
+        Args:
+            query_vector: Query to compare
+        
+        Returns:
+            (nearest_cluster_id, distance)
+        """
         min_distance = float('inf')
         nearest_id = None
         
         for cluster_id, cluster in self.clusters.items():
-            centroid = cluster["centroid"]
-            
-            # Calculate cosine distance (1 - cosine_similarity)
-            similarity = np.dot(query_vector, centroid) / (
-                np.linalg.norm(query_vector) * np.linalg.norm(centroid)
-            )
-            distance = 1 - similarity
+            distance = self._cosine_distance(query_vector, cluster["centroid"])
             
             if distance < min_distance:
                 min_distance = distance
                 nearest_id = cluster_id
         
-        return (nearest_id, min_distance)
-    
-    def _create_cluster(self, query_vector: np.ndarray, query_id: str) -> int:
-        """
-        Create a new semantic cluster.
-        
-        Args:
-            query_vector: Initial centroid
-            query_id: First query in cluster
-        
-        Returns:
-            New cluster ID
-        """
-        cluster_id = self.cluster_counter
-        self.cluster_counter += 1
-        
-        self.clusters[cluster_id] = {
-            "id": cluster_id,
-            "centroid": query_vector.copy(),
-            "created_at": time.time(),
-            "last_access": time.time(),
-            "access_count": 1,
-            "queries": [query_id],
-            "total_weight": 1.0
-        }
-        
-        self.query_to_cluster[query_id] = cluster_id
-        self.metrics["clusters_created"] += 1
-        
-        logger.info(f"[SEMANTIC] Created cluster {cluster_id} (total: {len(self.clusters)})")
-        
-        return cluster_id
-    
-    def _reinforce_cluster(self, cluster_id: int, query_vector: np.ndarray, query_id: str):
-        """
-        Reinforce existing cluster with momentum-based centroid update.
-        
-        Momentum Formula:
-            new_centroid = α * old_centroid + (1 - α) * query_vector
-        
-        Where α (momentum_alpha) is typically 0.9, meaning:
-        - 90% weight to existing centroid (stability)
-        - 10% weight to new query (adaptation)
-        
-        This prevents noise from causing false context shifts while
-        still allowing gradual adaptation to genuine topic changes.
-        
-        Args:
-            cluster_id: Cluster to reinforce
-            query_vector: New query embedding
-            query_id: Query identifier
-        """
-        cluster = self.clusters[cluster_id]
-        
-        # Momentum-based centroid update
-        old_centroid = cluster["centroid"]
-        new_centroid = (
-            self.momentum_alpha * old_centroid + 
-            (1 - self.momentum_alpha) * query_vector
-        )
-        
-        # Normalize to maintain unit length
-        new_centroid = new_centroid / np.linalg.norm(new_centroid)
-        
-        # Update cluster
-        cluster["centroid"] = new_centroid
-        cluster["last_access"] = time.time()
-        cluster["access_count"] += 1
-        cluster["queries"].append(query_id)
-        cluster["total_weight"] += 1.0
-        
-        self.query_to_cluster[query_id] = cluster_id
-        self.metrics["reinforcements"] += 1
-        
-        logger.debug(f"[SEMANTIC] Reinforced cluster {cluster_id} "
-                    f"(access_count={cluster['access_count']})")
+        return nearest_id, min_distance
     
     def get_centroid(self, cluster_id: int) -> Optional[np.ndarray]:
         """
-        Get the centroid vector for a cluster.
+        Get cluster centroid for trajectory guidance.
         
-        This is used by the anchor system to guide prediction trajectory:
-        predictions are generated along the path from query toward centroid.
+        Used by anchor system to bias predictions toward cluster.
         
         Args:
-            cluster_id: Cluster identifier
+            cluster_id: Cluster to get centroid from
         
         Returns:
-            Centroid vector if cluster exists, else None
+            Centroid vector (copy), or None if cluster doesn't exist
         """
         if cluster_id in self.clusters:
-            return self.clusters[cluster_id]["centroid"]
+            return self.clusters[cluster_id]["centroid"].copy()
+        
+        logger.warning(f"[SEMANTIC] Cluster {cluster_id} not found")
         return None
     
-    def get_cluster_for_query(self, query_id: str) -> Optional[int]:
+    def get_cluster_info(self, cluster_id: int) -> Optional[Dict]:
         """
-        Get the cluster ID that a query belongs to.
+        Get complete cluster information.
         
         Args:
-            query_id: Query identifier
+            cluster_id: Cluster to query
         
         Returns:
-            Cluster ID or None if query not found
+            Cluster metadata dict, or None if not found
         """
-        return self.query_to_cluster.get(query_id)
-    
-    def _evict_lru_cluster(self):
-        """
-        Evict the least-recently-used cluster to make room for new clusters.
-        
-        This is called when we hit max_clusters limit.
-        """
-        if not self.clusters:
-            return
-        
-        # Find cluster with oldest last_access time
-        lru_id = min(
-            self.clusters.keys(),
-            key=lambda cid: self.clusters[cid]["last_access"]
-        )
-        
-        cluster = self.clusters[lru_id]
-        age = time.time() - cluster["created_at"]
-        idle = time.time() - cluster["last_access"]
-        
-        logger.info(f"[SEMANTIC] ❌ Evicting LRU cluster {lru_id} "
-                   f"(age={age:.0f}s, idle={idle:.0f}s, accesses={cluster['access_count']})")
-        
-        # Remove cluster and query mappings
-        for query_id in cluster["queries"]:
-            if query_id in self.query_to_cluster:
-                del self.query_to_cluster[query_id]
-        
-        del self.clusters[lru_id]
-        self.metrics["clusters_evicted"] += 1
+        return self.clusters.get(cluster_id)
     
     def evict_stale_clusters(self) -> List[int]:
         """
         Evict clusters that haven't been accessed recently.
         
-        This is called periodically by the scheduler to clean up old clusters.
+        Eviction criteria:
+        - Idle time > CLUSTER_TTL_SECONDS
+        - Access count < CLUSTER_MIN_ACCESS_COUNT
         
         Returns:
             List of evicted cluster IDs
         """
         current_time = time.time()
-        to_evict = []
+        evicted = []
         
-        for cluster_id, cluster in self.clusters.items():
+        for cluster_id, cluster in list(self.clusters.items()):
             idle_time = current_time - cluster["last_access"]
             
-            if idle_time > CLUSTER_TTL_SECONDS:
-                to_evict.append(cluster_id)
+            # Evict if:
+            # 1. Idle for too long AND
+            # 2. Not accessed enough (indicates low relevance)
+            if (idle_time > CLUSTER_TTL_SECONDS and 
+                cluster["access_count"] < CLUSTER_MIN_ACCESS_COUNT):
+                
+                # Remove cluster
+                del self.clusters[cluster_id]
+                
+                # Remove query mappings
+                for query_id in cluster["query_ids"]:
+                    if query_id in self.query_to_cluster:
+                        del self.query_to_cluster[query_id]
+                
+                evicted.append(cluster_id)
+                
+                logger.info(f"[SEMANTIC] Evicted cluster {cluster_id} "
+                           f"(idle={idle_time:.0f}s, access={cluster['access_count']})")
         
-        # Evict identified clusters
-        for cluster_id in to_evict:
-            cluster = self.clusters[cluster_id]
-            logger.info(f"[SEMANTIC] ❌ Evicting stale cluster {cluster_id} "
-                       f"(idle={idle_time:.0f}s, TTL={CLUSTER_TTL_SECONDS}s)")
-            
-            # Remove query mappings
-            for query_id in cluster["queries"]:
-                if query_id in self.query_to_cluster:
-                    del self.query_to_cluster[query_id]
-            
-            del self.clusters[cluster_id]
-            self.metrics["clusters_evicted"] += 1
+        if evicted:
+            logger.info(f"[SEMANTIC] Evicted {len(evicted)} stale clusters")
         
-        if to_evict:
-            logger.info(f"[SEMANTIC] Evicted {len(to_evict)} stale clusters")
+        return evicted
+    
+    def _cosine_distance(self, v1: np.ndarray, v2: np.ndarray) -> float:
+        """
+        Calculate cosine distance (1 - cosine similarity).
         
-        return to_evict
+        Returns value in [0, 2]:
+        - 0.0 = identical vectors
+        - 1.0 = orthogonal vectors
+        - 2.0 = opposite vectors
+        """
+        # Normalize vectors
+        v1_norm = v1 / np.linalg.norm(v1)
+        v2_norm = v2 / np.linalg.norm(v2)
+        
+        # Cosine similarity
+        similarity = np.dot(v1_norm, v2_norm)
+        
+        # Convert to distance
+        distance = 1.0 - similarity
+        
+        return distance
     
     def get_stats(self) -> Dict:
         """
-        Get comprehensive statistics about semantic cache state.
+        Get comprehensive semantic cache statistics.
         
         Returns:
-            Dict with cluster counts, access patterns, metrics
+            Dict with cluster counts, sizes, access patterns
         """
         if not self.clusters:
             return {
                 "total_clusters": 0,
-                "total_queries_tracked": 0,
-                **self.metrics
+                "total_queries": 0,
+                "avg_cluster_size": 0.0,
+                "max_cluster_size": 0,
+                "avg_access_count": 0.0,
+                "max_access_count": 0
             }
         
+        cluster_sizes = [len(c["query_ids"]) for c in self.clusters.values()]
         access_counts = [c["access_count"] for c in self.clusters.values()]
-        ages = [time.time() - c["created_at"] for c in self.clusters.values()]
-        idle_times = [time.time() - c["last_access"] for c in self.clusters.values()]
         
         return {
             "total_clusters": len(self.clusters),
-            "total_queries_tracked": len(self.query_to_cluster),
+            "total_queries": sum(cluster_sizes),
+            "avg_cluster_size": np.mean(cluster_sizes),
+            "max_cluster_size": max(cluster_sizes),
+            "min_cluster_size": min(cluster_sizes),
             "avg_access_count": np.mean(access_counts),
-            "max_access_count": np.max(access_counts),
-            "avg_cluster_age_seconds": np.mean(ages),
-            "avg_idle_time_seconds": np.mean(idle_times),
-            **self.metrics
+            "max_access_count": max(access_counts),
+            "min_access_count": min(access_counts)
         }
+    
+    def get_cluster_distribution(self) -> Dict[int, int]:
+        """
+        Get distribution of queries across clusters.
+        
+        Returns:
+            {cluster_id: query_count}
+        """
+        return {
+            cluster_id: len(cluster["query_ids"])
+            for cluster_id, cluster in self.clusters.items()
+        }
+    
+    def reset(self):
+        """Reset semantic cache (clear all clusters)."""
+        self.clusters.clear()
+        self.query_to_cluster.clear()
+        self.cluster_counter = 0
+        logger.info("[SEMANTIC] Reset cache")

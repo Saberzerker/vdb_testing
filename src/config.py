@@ -1,401 +1,319 @@
 # src/config.py
 """
-Hybrid VDB System Configuration
-Optimized for 5K cloud + 1K local (300 permanent + 700 dynamic)
+Configuration for Hybrid VDB System
+
+All tunable parameters in one place.
+Defines the three-tier architecture parameters and learning thresholds.
 
 Author: Saberzerker
-Date: 2025-11-16
+Date: 2025-11-17
 """
 
 import os
-import logging
+from pathlib import Path
 
-# ================================================================
-# QDRANT CLOUD CONFIGURATION
-# ================================================================
 
-QDRANT_URL = ""
-QDRANT_API_KEY = ""
-QDRANT_COLLECTION_NAME = ""
-
-# ================================================================
-# VECTOR & EMBEDDING CONFIGURATION
-# ================================================================
-
-VECTOR_DIMENSION = 384
-EMBEDDING_MODEL = "all-MiniLM-L6-v2"
-
-# ================================================================
-# STORAGE PATHS
-# ================================================================
-
-# Base directory for VDB storage
-STORAGE_BASE_DIR = "data/vdb"
-
-# Permanent layer path
-BASE_LAYER_PATH = os.path.join(STORAGE_BASE_DIR, "permanent_layer")
-
-# Dynamic layer path
-DYNAMIC_LAYER_PATH = os.path.join(STORAGE_BASE_DIR, "dynamic_layer")
-
-# Hot partition path (RAM)
-HOT_PARTITION_PATH = os.path.join(DYNAMIC_LAYER_PATH, "hot")
-
-# Delta segments path (disk)
-DELTA_SEGMENTS_PATH = os.path.join(DYNAMIC_LAYER_PATH, "delta_segments")
-
-# Anchor storage path
-ANCHOR_STORAGE_PATH = os.path.join(STORAGE_BASE_DIR, "anchors")
-
-# Metrics output path
-METRICS_PATH = "results"
-
-# Logs path
-LOGS_PATH = "logs"
-
-# Cache layer path (alias for DYNAMIC_LAYER_PATH)
-CACHE_LAYER_PATH = DYNAMIC_LAYER_PATH
-
-# Compaction interval (in seconds, not just hours)
-
-# ================================================================
-# STORAGE CAPACITY (Optimized for 5K cloud + 1K local)
-# ================================================================
-
-# Cloud capacity (actual)
-CLOUD_CAPACITY = 9482  # Actual vectors in cloud
-
-# Total local VDB capacity (20% of cloud)
-TOTAL_LOCAL_CAPACITY = 1000  # vectors
-
-# Permanent layer (30% of local)
-PERMANENT_LAYER_CAPACITY = 300  # essential medical facts
-
-# Dynamic layer (70% of local)
-DYNAMIC_LAYER_CAPACITY = 700  # learned + prefetched
-
-# Hot partition (50% of dynamic = 350 in RAM)
-HOT_PARTITION_CAPACITY = 350  # most recent queries
-
-# Delta segments (50% of dynamic = 350 on disk)
-DELTA_SEGMENT_CAPACITY = 350  # overflow storage
-
-# Memory limits
-HOT_PARTITION_RAM_LIMIT = 2 * 1024 * 1024  # 2 MB
-
-# Compaction settings
-COMPACTION_THRESHOLD = 3  # Merge when 3+ delta segments
-COMPACTION_INTERVAL = 6 * 60 * 60  # 6 hours in seconds
-
-COMPACTION_INTERVAL_SECONDS = COMPACTION_INTERVAL
-
-# ================================================================
-# ANCHOR SYSTEM CONFIGURATION (Novel Learning Layer)
-# ================================================================
-
-# Maximum concurrent anchors
-MAX_ANCHORS = 50
-
-# Anchor strength thresholds for tier promotion
-WEAK_ANCHOR_THRESHOLD = 25.0      # 0-25: WEAK
-MEDIUM_ANCHOR_THRESHOLD = 60.0    # 25-60: MEDIUM
-STRONG_ANCHOR_THRESHOLD = 90.0    # 60-90: STRONG
-# 90-100: PERMANENT
-
-# Minimum anchor strength (prune anchors below this)
-MIN_ANCHOR_STRENGTH = 5.0
-
-# Anchor decay rates (multiplier per hour)
-WEAK_DECAY_RATE = 0.5      # Lose 50% per hour
-MEDIUM_DECAY_RATE = 0.8    # Lose 20% per hour
-STRONG_DECAY_RATE = 0.9    # Lose 10% per hour
-PERMANENT_DECAY_RATE = 1.0  # No decay
-
-# Anchor strength changes
-ANCHOR_CREATION_STRENGTH = 15.0      # Initial strength for new anchor
-PREDICTION_HIT_REWARD = 10.0         # Reward for correct prediction
-PREDICTION_MISS_PENALTY = 2.0        # Penalty for wrong prediction
-QUERY_HIT_BOOST = 5.0               # Boost for direct query hit
-
-# Cluster threshold for anchor creation
-CLUSTER_THRESHOLD = 0.15  # Max distance to merge into existing anchor
-
-# Time thresholds
-ANCHOR_DECAY_CHECK_INTERVAL = 3600   # Check decay every hour (seconds)
-ANCHOR_WEAK_TIMEOUT = 3600           # Remove weak anchors after 1 hour no hits
-ANCHOR_MEDIUM_TIMEOUT = 21600        # 6 hours
-ANCHOR_STRONG_TIMEOUT = 86400        # 24 hours
-
-# ================================================================
-# PREDICTION GENERATION CONFIGURATION
-# ================================================================
-
-# Prefetch settings
-PREFETCH_ENABLED = True
-
-# Predictions per anchor type
-PREDICTIONS_PER_WEAK_ANCHOR = 3
-PREDICTIONS_PER_MEDIUM_ANCHOR = 5
-PREDICTIONS_PER_STRONG_ANCHOR = 7
-PREDICTIONS_PER_PERMANENT_ANCHOR = 10
-
-# Prediction generation strategy
-PREDICTION_STRATEGY = "trajectory"  # Options: "trajectory", "centroid", "hybrid"
-PREDICTION_STEP_SIZE = 0.15         # Distance to step in semantic space
-PREDICTION_RADIUS = 0.10            # Spread radius for prediction diversity
-
-# Prediction hit detection
-PREDICTION_HIT_THRESHOLD = 0.85     # Cosine similarity to count as hit
-PREDICTION_MATCH_THRESHOLD = 0.85   # Alias for consistency
-
-# ================================================================
-# HYBRID ROUTING CONFIGURATION
-# ================================================================
-
-# Local search first
-LOCAL_SEARCH_FIRST = True
-
-# Confidence threshold for local-only results
-LOCAL_CONFIDENCE_THRESHOLD = 0.75
-
-# Top-K results
-DEFAULT_SEARCH_K = 5
-
-# Fallback behavior
-CLOUD_FALLBACK_ENABLED = True
-CLOUD_TIMEOUT_SECONDS = 10.0
-
-# ================================================================
-# SEMANTIC CACHE CONFIGURATION
-# ================================================================
-
-# Semantic clustering
-SEMANTIC_DRIFT_THRESHOLD = 0.35     # Cluster similarity threshold
-MOMENTUM_ALPHA = 0.85               # Momentum decay factor
-MAX_CLUSTERS = 10                   # Maximum semantic clusters
-
-# Cluster momentum thresholds
-CLUSTER_HOT_THRESHOLD = 5.0         # High momentum cluster
-CLUSTER_WARM_THRESHOLD = 2.0        # Medium momentum
-CLUSTER_COLD_THRESHOLD = 0.5        # Low momentum (evict)
-
-# Momentum decay
-MOMENTUM_DECAY_RATE = 0.95          # Per time unit
-MOMENTUM_DECAY_INTERVAL = 60   
-
-# Cluster TTL (Time To Live)
-CLUSTER_TTL_SECONDS = 300           # 5 minutes (ADD THIS LINE)
-CLUSTER_MAX_AGE = 1800    # Seconds
-
-# ================================================================
-# PERFORMANCE & RELIABILITY
-# ================================================================
-
-# Search settings
-SEARCH_TIMEOUT_LOCAL = 1.0          # 1 second local timeout
-SEARCH_TIMEOUT_CLOUD = 10.0         # 10 second cloud timeout
-
-# Batch processing
-BATCH_SIZE_EMBEDDING = 32           # Embed 32 queries at once
-BATCH_SIZE_UPLOAD = 100             # Upload 100 vectors at once
-
-# Retry settings
-MAX_RETRIES_CLOUD = 3
-RETRY_DELAY_SECONDS = 1.0
-
-# Cache settings
-ENABLE_QUERY_CACHE = True           # Cache recent query results
-QUERY_CACHE_SIZE = 100              # Cache last 100 queries
-QUERY_CACHE_TTL = 300               # 5 minutes
-
-# ================================================================
-# LOGGING & DEBUG
-# ================================================================
-
-LOG_LEVEL = logging.INFO
-LOG_FILE = os.path.join(LOGS_PATH, "hybrid_vdb.log")
-
-# Verbose logging flags
-VERBOSE = True
-LOG_ANCHOR_EVENTS = True            # Log anchor creation/promotion/deletion
-LOG_PREDICTIONS = True              # Log prediction generation/hits
-LOG_REINFORCEMENT = True            # Log learning signals
-LOG_SEARCH_DETAILS = False          # Detailed search logging (noisy)
-LOG_TIMING = True                   # Log operation timing
-
-# Console output
-CONSOLE_LOG_LEVEL = logging.INFO
-SHOW_PROGRESS_BARS = True
-
-# ================================================================
-# METRICS & MONITORING
-# ================================================================
-
-# Metrics collection
-ENABLE_METRICS = True
-METRICS_EXPORT_INTERVAL = 10        # Export every 10 queries
-METRICS_EXPORT_PATH = os.path.join(METRICS_PATH, "session_metrics.json")
-
-# Tracked metrics
-TRACK_LATENCY = True
-TRACK_HIT_RATE = True
-TRACK_PREDICTION_ACCURACY = True
-TRACK_ANCHOR_STATS = True
-TRACK_MEMORY_USAGE = True
-
-# Performance baselines
-ENABLE_BASELINE_COMPARISON = True   # Compare to cloud-only baseline
-EXPORT_DETAILED_METRICS = True      # Export comprehensive metrics
-
-# ================================================================
-# EXPERIMENT CONFIGURATION
-# ================================================================
-
-# A/B Testing
-ENABLE_AB_TESTING = False           # Enable A/B test mode
-AB_TEST_RATIO = 0.5                 # 50% with anchors, 50% without
-
-# Evaluation mode
-EVALUATION_MODE = False             # Disable learning for evaluation
-COLD_START_MODE = False             # Start with empty local cache
-
-# Simulation settings (for testing)
-SIMULATE_CLOUD_LATENCY = False      # Add artificial cloud delay
-SIMULATED_CLOUD_LATENCY_MS = 200    # Simulated latency
-
-# ================================================================
-# OLLAMA / LLM CONFIGURATION (for demo)
-# ================================================================
-
-# Ollama settings
-OLLAMA_BASE_URL = "http://localhost:11434"
-OLLAMA_MODEL = "llama3.2:1b"        # Lightweight for demo
-OLLAMA_TIMEOUT = 30                 # 30 seconds for generation
-
-# RAG settings
-RAG_CONTEXT_SIZE = 3                # Use top-3 retrieved documents
-RAG_MAX_CONTEXT_LENGTH = 1500       # Max characters per document
-RAG_TEMPERATURE = 0.7               # Generation temperature
-
-# ================================================================
-# SYSTEM LIMITS
-# ================================================================
-
-# Safety limits
-MAX_QUERY_LENGTH = 1000             # Max characters in query
-MAX_DOCUMENT_LENGTH = 10000         # Max characters in document
-MAX_BATCH_SIZE = 1000               # Max vectors in single operation
-
-# Resource limits
-MAX_MEMORY_MB = 100                 # Max RAM usage for VDB
-MAX_DISK_MB = 500                   # Max disk usage for VDB
-
-# ================================================================
-# FEATURE FLAGS
-# ================================================================
-
-# Core features
-ENABLE_ANCHOR_SYSTEM = True         # Novel anchor-based learning
-ENABLE_PREDICTIVE_PREFETCH = True   # Trajectory-based prefetching
-ENABLE_SEMANTIC_CACHE = True        # Momentum-based clustering
-ENABLE_TWO_TIER_STORAGE = True      # Permanent + dynamic layers
-
-# Advanced features
-ENABLE_FEDERATED_LEARNING = False   # Multi-device learning (future)
-ENABLE_PERSONALIZATION = False      # Per-user anchors (future)
-ENABLE_DRIFT_DETECTION = True       # Query distribution drift detection
-
-
-
-# ================================================================
-# SEMANTIC CACHE - ADDITIONAL SETTINGS
-# ================================================================
-
-# Cluster reinforcement
-MIN_CLUSTER_REINFORCEMENT_SCORE = 10.0
-MAX_CLUSTER_REINFORCEMENT_SCORE = 100.0
-CLUSTER_REINFORCEMENT_DECAY = 0.95
-CLUSTER_REINFORCEMENT_BOOST = 5.0
-CLUSTER_CREATION_THRESHOLD = 3      # Min queries to create cluster
-CLUSTER_MERGE_THRESHOLD = 0.85      # Similarity to merge clusters
-MIN_CLUSTER_SIZE = 2                # Min vectors per cluster
-
-# Cache eviction
-CACHE_EVICTION_POLICY = "MOMENTUM"  # LRU, LFU, or MOMENTUM
-MAX_CACHE_SIZE_MB = 50              # Max cache size
-CACHE_CLEANUP_INTERVAL = 300        # Cleanup every 5 minutes
-
-
-# ================================================================
-# BACKWARD COMPATIBILITY ALIASES (for anchor_system.py)
-# ================================================================
-
-# Old anchor strength threshold names
-ANCHOR_STRENGTH_WEAK = 0
-ANCHOR_STRENGTH_MEDIUM = WEAK_ANCHOR_THRESHOLD      # 25.0
-ANCHOR_STRENGTH_STRONG = MEDIUM_ANCHOR_THRESHOLD    # 60.0
-ANCHOR_STRENGTH_PERMANENT = STRONG_ANCHOR_THRESHOLD # 90.0
-
-# Old decay rate names (inverted logic: old rates are per-cycle loss amounts)
-ANCHOR_DECAY_RATE_WEAK = 0.5        # Loses 0.5 per cycle
-ANCHOR_DECAY_RATE_MEDIUM = 0.2      # Loses 0.2 per cycle
-ANCHOR_DECAY_RATE_STRONG = 0.1      # Loses 0.1 per cycle
-ANCHOR_DECAY_RATE_PERMANENT = 0.0   # No loss
-
-# Prefetch config alias
-PREFETCH_K = 5
-
-# ================================================================
-# UTILITY FUNCTIONS
-# ================================================================
-
-def create_directories():
-    """Create necessary directories for VDB system."""
-    dirs = [
-        STORAGE_BASE_DIR,
-        BASE_LAYER_PATH,
-        DYNAMIC_LAYER_PATH,
-        HOT_PARTITION_PATH,
-        DELTA_SEGMENTS_PATH,
-        ANCHOR_STORAGE_PATH,
-        METRICS_PATH,
-        LOGS_PATH
-    ]
+class Config:
+    """Central configuration for hybrid VDB system."""
     
-    for directory in dirs:
-        os.makedirs(directory, exist_ok=True)
+    # ═══════════════════════════════════════════════════════════
+    # PATHS
+    # ═══════════════════════════════════════════════════════════
+    
+    BASE_DIR = Path(__file__).parent.parent
+    DATA_DIR = BASE_DIR / "data"
+    
+    BASE_LAYER_PATH = DATA_DIR / "permanent"
+    DYNAMIC_LAYER_PATH = DATA_DIR / "dynamic"
+    LOGS_DIR = BASE_DIR / "logs"
+    
+    # Create directories if they don't exist
+    BASE_LAYER_PATH.mkdir(parents=True, exist_ok=True)
+    DYNAMIC_LAYER_PATH.mkdir(parents=True, exist_ok=True)
+    LOGS_DIR.mkdir(parents=True, exist_ok=True)
+    
+    # ═══════════════════════════════════════════════════════════
+    # VECTOR DIMENSIONS
+    # ═══════════════════════════════════════════════════════════
+    
+    VECTOR_DIMENSION = 384  # all-MiniLM-L6-v2 dimension
+    
+    # ═══════════════════════════════════════════════════════════
+    # STORAGE CAPACITY (THREE-TIER ARCHITECTURE)
+    # ═══════════════════════════════════════════════════════════
+    
+    # TIER 1: Permanent Layer (Kitchen - Privacy Layer)
+    PERMANENT_LAYER_CAPACITY = 300  # Read-only, pre-seeded, never evicted
+    
+    # TIER 2: Dynamic Layer (Backpack - Learning Engine, FIXED SIZE!)
+    DYNAMIC_LAYER_CAPACITY = 700    # Learning space, NEVER grows beyond this!
+    
+    # Hot partition (in-memory portion of dynamic)
+    HOT_PARTITION_RAM_LIMIT = 350   # Half of dynamic in RAM for speed
+    
+    # TIER 3: Cloud VDB (Bakery - Canonical Truth)
+    # No capacity limit (cloud has unlimited storage)
+    
+    # ═══════════════════════════════════════════════════════════
+    # CLOUD VDB CONFIGURATION (TIER 3)
+    # ═══════════════════════════════════════════════════════════
+    
+    CLOUD_PROVIDER = os.getenv("CLOUD_PROVIDER", "qdrant")
+    CLOUD_URL = os.getenv("QDRANT_URL", "https://6e6e7451-fa6d-4dcb-b987-49dba2bb7373.europe-west3-0.gcp.cloud.qdrant.io:6333")
+    CLOUD_API_KEY = os.getenv("QDRANT_API_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.duR7ZSdOyXclYfAm6AR8-ttSg1sAdBYmF4Vw4ykshaE")
+    CLOUD_COLLECTION_NAME = os.getenv("QDRANT_COLLECTION", "hybrid_vdb_test")
+    
+    # Cloud artificial latency for testing (when using stub)
+    CLOUD_ARTIFICIAL_LATENCY_MS = 200
+    CLOUD_TIMEOUT_SECONDS = 10.0
+    
+    # ═══════════════════════════════════════════════════════════
+    # SEARCH PARAMETERS
+    # ═══════════════════════════════════════════════════════════
+    
+    DEFAULT_SEARCH_K = 5
+    LOCAL_CONFIDENCE_THRESHOLD = 0.75  # Min score to trust local result (75%)
+    
+    # Similarity thresholds
+    MIN_SIMILARITY_THRESHOLD = 0.50  # Below this = not relevant
+    HIGH_SIMILARITY_THRESHOLD = 0.90  # Above this = very confident
+    
+    # ═══════════════════════════════════════════════════════════
+    # PREFETCHING PARAMETERS (THE SMART LEARNING!)
+    # ═══════════════════════════════════════════════════════════
+    
+    PREFETCH_ENABLED = True
+    PREFETCH_K = 5  # Number of predictions to generate per query
+    
+    # Phase thresholds (determines prefetch strategy)
+    COLD_START_QUERIES = 3   # Queries 1-3: Fill aggressively
+    WARMUP_QUERIES = 20      # Queries 4-20: Refine accuracy
+    # After query 20: Steady state (high accuracy maintenance)
+    
+    # Prediction matching threshold
+    PREDICTION_SIMILARITY_THRESHOLD = 0.85  # 85% similar = prediction match
+    
+    # Neighborhood checking thresholds (SMART CHECK!)
+    # These determine when to SKIP fetching (because we already have it)
+    NEIGHBORHOOD_THRESHOLD_COLD = 0.85       # Cold start (less strict)
+    NEIGHBORHOOD_THRESHOLD_WARMUP = 0.90     # Warmup (moderate)
+    NEIGHBORHOOD_THRESHOLD_STEADY = 0.92     # Steady state (very strict)
+    
+    # Prediction generation noise
+    NOISE_SCALE_COLD = 0.30     # High noise for exploration
+    NOISE_SCALE_WARMUP = 0.15   # Medium noise
+    NOISE_SCALE_STEADY = 0.05   # Low noise, exploit known paths
+    
+    # ═══════════════════════════════════════════════════════════
+    # ANCHOR SYSTEM (STAR RATING SYSTEM!)
+    # ═══════════════════════════════════════════════════════════
+    
+    # Anchor type thresholds (strength levels)
+    ANCHOR_WEAK_THRESHOLD = 0.0        # ⭐ (0-25 strength)
+    ANCHOR_MEDIUM_THRESHOLD = 25.0     # ⭐⭐⭐ (25-60 strength)
+    ANCHOR_STRONG_THRESHOLD = 60.0     # ⭐⭐⭐⭐⭐ (60-90 strength)
+    ANCHOR_PERMANENT_THRESHOLD = 90.0  # ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐ (90+ strength)
+    
+    # Reinforcement parameters
+    ANCHOR_HIT_REWARD = 1.0          # Strength increase on correct prediction
+    ANCHOR_MISS_PENALTY = 0.5        # Strength decrease on wrong prediction
+    ANCHOR_PARENT_CREDIT = 0.5       # Credit to parent anchor (50%)
+    ANCHOR_CHILD_BOOST = 0.3         # Priority boost to children
+    
+    # Decay rates (per hour of idle time)
+    ANCHOR_DECAY_WEAK = 0.5      # Weak anchors decay 50%/hour
+    ANCHOR_DECAY_MEDIUM = 0.2    # Medium anchors decay 20%/hour
+    ANCHOR_DECAY_STRONG = 0.1    # Strong anchors decay 10%/hour
+    ANCHOR_DECAY_PERMANENT = 0.0 # Permanent anchors NEVER decay
+    
+    # Eviction timeouts (idle time before removal)
+    ANCHOR_EVICT_WEAK_SECONDS = 3600      # 1 hour idle
+    ANCHOR_EVICT_MEDIUM_SECONDS = 21600   # 6 hours idle
+    ANCHOR_EVICT_STRONG_SECONDS = 86400   # 24 hours idle
+    # Permanent anchors are NEVER evicted
+    
+    # Minimum strength before eviction
+    ANCHOR_MIN_STRENGTH = 0.1
+    
+    # ═══════════════════════════════════════════════════════════
+    # SEMANTIC CACHE (MOMENTUM-BASED CLUSTERING)
+    # ═══════════════════════════════════════════════════════════
+    
+    SEMANTIC_DRIFT_THRESHOLD = 0.35  # Distance > 0.35 = new cluster created
+    MOMENTUM_ALPHA = 0.9  # Centroid momentum (0.9 = 90% old, 10% new)
+    MIN_CLUSTER_REINFORCEMENT_SCORE = 0.70  # Min score to reinforce cluster
+    
+    # Cluster lifecycle
+    CLUSTER_TTL_SECONDS = 86400  # 24 hours before cluster can be evicted
+    CLUSTER_MIN_ACCESS_COUNT = 3  # Min accesses to avoid eviction
+    
+    # ═══════════════════════════════════════════════════════════
+    # BACKGROUND JOBS (MAINTENANCE)
+    # ═══════════════════════════════════════════════════════════
+    
+    COMPACTION_INTERVAL_SECONDS = 3600  # Compact dynamic layer every 1 hour
+    DECAY_INTERVAL_SECONDS = 1800       # Check for decay every 30 minutes
+    EVICTION_INTERVAL_SECONDS = 3600    # Evict weak anchors every 1 hour
+    
+    # Auto-save interval
+    AUTOSAVE_INTERVAL_SECONDS = 600  # Save state every 10 minutes
+    
+    # ═══════════════════════════════════════════════════════════
+    # LOGGING & DEBUGGING
+    # ═══════════════════════════════════════════════════════════
+    
+    LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+    VERBOSE = os.getenv("VERBOSE", "true").lower() == "true"
+    
+    LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    LOG_FILE = LOGS_DIR / "hybrid_vdb.log"
+    
+    # ═══════════════════════════════════════════════════════════
+    # DEMO APP SETTINGS
+    # ═══════════════════════════════════════════════════════════
+    
+    DEMO_HOST = "0.0.0.0"
+    DEMO_PORT = 5000
+    DEMO_DEBUG = False
+    
+    # LLM settings (for RAG)
+    OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
+    OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "phi3:mini")
+    OLLAMA_TIMEOUT = 45 
+    
+    # RAG settings
+    RAG_CONTEXT_SIZE = 3  # Top-3 documents for context
+    RAG_MAX_CONTEXT_LENGTH = 2000  # Max characters per document
+    
+    # ═══════════════════════════════════════════════════════════
+    # METRICS & TELEMETRY
+    # ═══════════════════════════════════════════════════════════
+    
+    METRICS_ENABLED = True
+    METRICS_EXPORT_INTERVAL = 60  # Export metrics every minute
+    METRICS_HISTORY_LIMIT = 1000  # Keep last 1000 events
+    
+    # ═══════════════════════════════════════════════════════════
+    # DEVELOPMENT & TESTING
+    # ═══════════════════════════════════════════════════════════
+    
+    USE_REAL_SYSTEM = os.getenv("USE_REAL_SYSTEM", "true").lower() == "true"
+    ENABLE_PROFILING = False
+    
+    # Test mode settings
+    TEST_MODE = os.getenv("TEST_MODE", "false").lower() == "true"
+    TEST_QUERY_LIMIT = 100  # Max queries in test mode
 
 
-def get_config_summary():
-    """Return configuration summary as dict."""
-    return {
-        "cloud": {
-            "url": QDRANT_URL,
-            "collection": QDRANT_COLLECTION_NAME,
-            "capacity": CLOUD_CAPACITY
-        },
-        "local": {
-            "total_capacity": TOTAL_LOCAL_CAPACITY,
-            "permanent": PERMANENT_LAYER_CAPACITY,
-            "dynamic": DYNAMIC_LAYER_CAPACITY,
-            "hot_partition": HOT_PARTITION_CAPACITY,
-            "delta_segments": DELTA_SEGMENT_CAPACITY
-        },
-        "anchors": {
-            "max_anchors": MAX_ANCHORS,
-            "weak_threshold": WEAK_ANCHOR_THRESHOLD,
-            "medium_threshold": MEDIUM_ANCHOR_THRESHOLD,
-            "strong_threshold": STRONG_ANCHOR_THRESHOLD
-        },
-        "features": {
-            "anchor_system": ENABLE_ANCHOR_SYSTEM,
-            "prefetch": ENABLE_PREDICTIVE_PREFETCH,
-            "semantic_cache": ENABLE_SEMANTIC_CACHE,
-            "two_tier": ENABLE_TWO_TIER_STORAGE
-        }
-    }
 
+# ═══════════════════════════════════════════════════════════
+# CREATE SINGLETON & EXPORT ALL CONSTANTS
+# ═══════════════════════════════════════════════════════════
 
-# Auto-create directories on import
+# Create singleton instance
+config = Config()
 
-create_directories()
+# Vector dimensions
+VECTOR_DIMENSION = config.VECTOR_DIMENSION
+
+# Paths
+BASE_LAYER_PATH = config.BASE_LAYER_PATH
+DYNAMIC_LAYER_PATH = config.DYNAMIC_LAYER_PATH
+LOGS_DIR = config.LOGS_DIR
+DATA_DIR = config.DATA_DIR
+
+# Storage capacity
+PERMANENT_LAYER_CAPACITY = config.PERMANENT_LAYER_CAPACITY
+DYNAMIC_LAYER_CAPACITY = config.DYNAMIC_LAYER_CAPACITY
+HOT_PARTITION_RAM_LIMIT = config.HOT_PARTITION_RAM_LIMIT
+
+# Search parameters
+DEFAULT_SEARCH_K = config.DEFAULT_SEARCH_K
+LOCAL_CONFIDENCE_THRESHOLD = config.LOCAL_CONFIDENCE_THRESHOLD
+MIN_SIMILARITY_THRESHOLD = config.MIN_SIMILARITY_THRESHOLD
+HIGH_SIMILARITY_THRESHOLD = config.HIGH_SIMILARITY_THRESHOLD
+
+# Prefetch parameters
+PREFETCH_ENABLED = config.PREFETCH_ENABLED
+PREFETCH_K = config.PREFETCH_K
+COLD_START_QUERIES = config.COLD_START_QUERIES
+WARMUP_QUERIES = config.WARMUP_QUERIES
+PREDICTION_SIMILARITY_THRESHOLD = config.PREDICTION_SIMILARITY_THRESHOLD
+NEIGHBORHOOD_THRESHOLD_COLD = config.NEIGHBORHOOD_THRESHOLD_COLD
+NEIGHBORHOOD_THRESHOLD_WARMUP = config.NEIGHBORHOOD_THRESHOLD_WARMUP
+NEIGHBORHOOD_THRESHOLD_STEADY = config.NEIGHBORHOOD_THRESHOLD_STEADY
+NOISE_SCALE_COLD = config.NOISE_SCALE_COLD
+NOISE_SCALE_WARMUP = config.NOISE_SCALE_WARMUP
+NOISE_SCALE_STEADY = config.NOISE_SCALE_STEADY
+
+# Anchor system
+ANCHOR_WEAK_THRESHOLD = config.ANCHOR_WEAK_THRESHOLD
+ANCHOR_MEDIUM_THRESHOLD = config.ANCHOR_MEDIUM_THRESHOLD
+ANCHOR_STRONG_THRESHOLD = config.ANCHOR_STRONG_THRESHOLD
+ANCHOR_PERMANENT_THRESHOLD = config.ANCHOR_PERMANENT_THRESHOLD
+ANCHOR_HIT_REWARD = config.ANCHOR_HIT_REWARD
+ANCHOR_MISS_PENALTY = config.ANCHOR_MISS_PENALTY
+ANCHOR_PARENT_CREDIT = config.ANCHOR_PARENT_CREDIT
+ANCHOR_CHILD_BOOST = config.ANCHOR_CHILD_BOOST
+ANCHOR_DECAY_WEAK = config.ANCHOR_DECAY_WEAK
+ANCHOR_DECAY_MEDIUM = config.ANCHOR_DECAY_MEDIUM
+ANCHOR_DECAY_STRONG = config.ANCHOR_DECAY_STRONG
+ANCHOR_DECAY_PERMANENT = config.ANCHOR_DECAY_PERMANENT
+ANCHOR_EVICT_WEAK_SECONDS = config.ANCHOR_EVICT_WEAK_SECONDS
+ANCHOR_EVICT_MEDIUM_SECONDS = config.ANCHOR_EVICT_MEDIUM_SECONDS
+ANCHOR_EVICT_STRONG_SECONDS = config.ANCHOR_EVICT_STRONG_SECONDS
+ANCHOR_MIN_STRENGTH = config.ANCHOR_MIN_STRENGTH
+
+# Semantic cache
+SEMANTIC_DRIFT_THRESHOLD = config.SEMANTIC_DRIFT_THRESHOLD
+MOMENTUM_ALPHA = config.MOMENTUM_ALPHA
+MIN_CLUSTER_REINFORCEMENT_SCORE = config.MIN_CLUSTER_REINFORCEMENT_SCORE
+CLUSTER_TTL_SECONDS = config.CLUSTER_TTL_SECONDS
+CLUSTER_MIN_ACCESS_COUNT = config.CLUSTER_MIN_ACCESS_COUNT
+
+# Background jobs
+COMPACTION_INTERVAL_SECONDS = config.COMPACTION_INTERVAL_SECONDS
+DECAY_INTERVAL_SECONDS = config.DECAY_INTERVAL_SECONDS
+EVICTION_INTERVAL_SECONDS = config.EVICTION_INTERVAL_SECONDS
+AUTOSAVE_INTERVAL_SECONDS = config.AUTOSAVE_INTERVAL_SECONDS
+
+# Logging
+LOG_LEVEL = config.LOG_LEVEL
+VERBOSE = config.VERBOSE
+LOG_FORMAT = config.LOG_FORMAT
+LOG_FILE = config.LOG_FILE
+
+# Demo app
+DEMO_HOST = config.DEMO_HOST
+DEMO_PORT = config.DEMO_PORT
+DEMO_DEBUG = config.DEMO_DEBUG
+OLLAMA_HOST = config.OLLAMA_HOST
+OLLAMA_MODEL = config.OLLAMA_MODEL
+OLLAMA_TIMEOUT = config.OLLAMA_TIMEOUT
+RAG_CONTEXT_SIZE = config.RAG_CONTEXT_SIZE
+RAG_MAX_CONTEXT_LENGTH = config.RAG_MAX_CONTEXT_LENGTH
+
+# Metrics
+METRICS_ENABLED = config.METRICS_ENABLED
+METRICS_EXPORT_INTERVAL = config.METRICS_EXPORT_INTERVAL
+METRICS_HISTORY_LIMIT = config.METRICS_HISTORY_LIMIT
+
+# Development
+USE_REAL_SYSTEM = config.USE_REAL_SYSTEM
+ENABLE_PROFILING = config.ENABLE_PROFILING
+TEST_MODE = config.TEST_MODE
+TEST_QUERY_LIMIT = config.TEST_QUERY_LIMIT
+
+# Cloud (add this if missing from Config class)
+CLOUD_TIMEOUT_SECONDS = 30
+CLOUD_PROVIDER = config.CLOUD_PROVIDER
+CLOUD_URL = config.CLOUD_URL
+CLOUD_API_KEY = config.CLOUD_API_KEY
+CLOUD_COLLECTION_NAME = config.CLOUD_COLLECTION_NAME
+CLOUD_ARTIFICIAL_LATENCY_MS = config.CLOUD_ARTIFICIAL_LATENCY_MS
+ANCHOR_DECAY_CHECK_INTERVAL = config.DECAY_INTERVAL_SECONDS
+
+# Convenience function
+def get_config():
+    """Get configuration singleton."""
+    return config

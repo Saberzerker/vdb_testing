@@ -9,7 +9,7 @@ from sentence_transformers import SentenceTransformer
 import numpy as np
 from typing import List, Tuple
 import time
-
+from src.config import CLOUD_TIMEOUT_SECONDS
 from src.config import *
 
 

@@ -1,4 +1,4 @@
-# test_components.py
+# tests/test_components.py
 """Test each component individually."""
 
 import sys
@@ -9,7 +9,7 @@ def test_config():
     print("\n[1/10] Testing config...")
     try:
         from src import config
-        assert hasattr(config, 'CACHE_LAYER_PATH')
+        assert hasattr(config, 'DYNAMIC_LAYER_PATH')  # FIXED
         assert hasattr(config, 'COMPACTION_INTERVAL_SECONDS')
         print("✅ Config OK")
         return True
@@ -21,12 +21,12 @@ def test_cloud_client():
     print("\n[2/10] Testing cloud_client...")
     try:
         from src.cloud_client import QdrantCloudClient
-        from src.config import QDRANT_URL, QDRANT_API_KEY, QDRANT_COLLECTION_NAME, VECTOR_DIMENSION
+        from src.config import CLOUD_URL, CLOUD_API_KEY, CLOUD_COLLECTION_NAME, VECTOR_DIMENSION  # FIXED
         
         client = QdrantCloudClient(
-            url=QDRANT_URL,
-            api_key=QDRANT_API_KEY,
-            collection_name=QDRANT_COLLECTION_NAME,
+            url=CLOUD_URL,
+            api_key=CLOUD_API_KEY,
+            collection_name=CLOUD_COLLECTION_NAME,
             dimension=VECTOR_DIMENSION
         )
         stats = client.get_collection_stats()

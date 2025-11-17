@@ -1,181 +1,228 @@
 # src/local_vdb.py
 """
-Local Vector Database Interface.
+Local VDB Interface - Clean API for Three-Tier System
 
-Provides a clean API wrapper around the storage engine.
-Handles layer routing (permanent vs dynamic) and metadata management.
+Wrapper around StorageEngine that provides:
+- Easy tier separation (permanent vs dynamic)
+- Smart neighborhood checking
+- Weight management
+- Statistics tracking
 
 Author: Saberzerker
-Date: 2025-11-16
+Date: 2025-11-17 00:10 UTC
 """
 
 import numpy as np
 import logging
-from typing import List, Dict, Optional, Tuple
+from typing import List, Tuple, Optional, Dict
 
 from src.storage_engine import StorageEngine
-from src.config import VECTOR_DIMENSION
+from src.config import Config
 
 logger = logging.getLogger(__name__)
 
 
 class LocalVDB:
     """
-    High-level interface for local vector database operations.
-    
-    Abstracts away storage engine details and provides simple methods
-    for insert, search, delete operations with proper layer routing.
+    User-friendly interface for three-tier local VDB.
+
+    Hides complexity of storage engine.
+    Makes it easy to:
+    - Search specific tiers
+    - Check if neighborhood exists
+    - Manage capacity
+    - Track weights
     """
-    
-    def __init__(self, config=None):
-        """Initialize local VDB with optional config."""
-        if config is None:
-         # Import config module
-            from src import config as cfg
-            config = cfg
-    
-        self.storage = StorageEngine(config)
-        self.dimension = config.VECTOR_DIMENSION
-    
-    logger.info("[LOCAL VDB] Initialized")
-    
-    def insert_vector(
-        self,
-        vectors: np.ndarray,
-        ids: List[str],
-        layer: str = "dynamic",
-        anchor_id: Optional[int] = None,
-        metadata: Optional[Dict] = None
+
+    def __init__(self, config: Config = None):
+        """Initialize local VDB with storage engine."""
+        self.config = config or Config()
+        self.storage = StorageEngine(self.config)
+
+        logger.info("[LOCAL VDB] Initialized")
+        logger.info(f"[LOCAL VDB] Permanent: {self.get_permanent_count()} vectors")
+        logger.info(
+            f"[LOCAL VDB] Dynamic: {self.get_dynamic_count()}/{self.storage.dynamic_capacity} vectors"
+        )
+
+    # ═══════════════════════════════════════════════════════════
+    # TIER 1: PERMANENT LAYER (Kitchen)
+    # ═══════════════════════════════════════════════════════════
+
+    def search_permanent(
+        self, query_vector: np.ndarray, k: int = 5
+    ) -> Tuple[List[str], List[float]]:
+        """
+        Search only permanent layer.
+
+        Use when:
+        - Want privacy-guaranteed results
+        - Checking baseline knowledge
+        """
+        return self.storage.search_permanent(query_vector, k)
+
+    def get_permanent_count(self) -> int:
+        """How many vectors in permanent layer?"""
+        return self.storage._count_permanent()
+
+    def get_permanent_stats(self) -> Dict:
+        """Get permanent layer statistics."""
+        return {
+            "vector_count": self.get_permanent_count(),
+            "read_only": True,
+            "layer": "permanent",
+        }
+
+    # ═══════════════════════════════════════════════════════════
+    # TIER 2: DYNAMIC LAYER (Backpack)
+    # ═══════════════════════════════════════════════════════════
+
+    def search_dynamic(
+        self, query_vector: np.ndarray, k: int = 5
+    ) -> Tuple[List[str], List[float]]:
+        """
+        Search only dynamic layer.
+
+        Use when:
+        - Checking learned knowledge
+        - Verifying predictions
+        """
+        return self.storage.search_dynamic(query_vector, k)
+
+    def insert_dynamic(
+        self, vectors: np.ndarray, ids: List[str], metadata: Optional[Dict] = None
     ):
         """
-        Insert vectors into specified layer.
-        
-        Args:
-            vectors: Vector embeddings (shape: [n, dimension] or [dimension])
-            ids: Vector IDs (list of strings)
-            layer: "permanent" or "dynamic" (default: dynamic)
-            anchor_id: Associated anchor ID for tracking
-            metadata: Additional metadata (source, cluster_id, etc.)
-        
+        Insert vectors into dynamic layer.
+
         Raises:
-            ValueError: If trying to insert into permanent layer during runtime
+            ValueError if dynamic is full (must evict first)
         """
-        if layer == "permanent":
-            raise ValueError(
-                "Cannot insert into permanent layer during runtime. "
-                "Use seed_database.py to populate permanent layer."
-            )
-        
-        # Ensure vectors is 2D array
-        if vectors.ndim == 1:
-            vectors = vectors.reshape(1, -1)
-        
-        # Validate dimensions
-        if vectors.shape[1] != self.dimension:
-            raise ValueError(
-                f"Vector dimension mismatch: expected {self.dimension}, "
-                f"got {vectors.shape[1]}"
-            )
-        
-        # Merge anchor_id into metadata
-        if metadata is None:
-            metadata = {}
-        if anchor_id is not None:
-            metadata["anchor_id"] = anchor_id
-        
-        # Insert into storage engine
-        self.storage.insert(vectors, ids, metadata=metadata)
-        
-        logger.debug(f"[LOCAL VDB] Inserted {len(ids)} vectors into {layer} layer")
-    
-    def search(self, query_vector: np.ndarray, k: int) -> Tuple[List[str], List[float]]:
+        try:
+            self.storage.insert_dynamic(vectors, ids, metadata)
+            logger.debug(f"[LOCAL VDB] Inserted {len(ids)} vectors to dynamic")
+        except ValueError as e:
+            logger.error(f"[LOCAL VDB] Insert failed: {e}")
+            raise
+
+    def delete_dynamic(self, vec_id: str):
+        """Delete vector from dynamic layer."""
+        self.storage.delete_dynamic(vec_id)
+
+    def get_dynamic_count(self) -> int:
+        """How many vectors in dynamic layer?"""
+        return self.storage._count_dynamic()
+
+    def is_dynamic_full(self) -> bool:
+        """Is dynamic layer at capacity?"""
+        return self.storage.is_dynamic_full()
+
+    def has_dynamic_space(self, n: int) -> bool:
+        """Does dynamic have space for n vectors?"""
+        return self.storage.has_dynamic_space(n)
+
+    def get_dynamic_stats(self) -> Dict:
+        """Get dynamic layer statistics."""
+        return self.storage.get_dynamic_stats()
+
+    # ═══════════════════════════════════════════════════════════
+    # SMART OPERATIONS
+    # ═══════════════════════════════════════════════════════════
+
+    def exists_in_dynamic_neighborhood(
+        self, query_vector: np.ndarray, threshold: float = 0.90
+    ) -> bool:
         """
-        Search across both permanent and dynamic layers.
-        
+        🔍 SMART CHECK: Does similar vector exist in dynamic?
+
+        This is THE KEY innovation!
+
+        Before fetching from cloud:
+          if local_vdb.exists_in_dynamic_neighborhood(prediction):
+              skip_fetch()  # Save 900ms!
+
         Args:
-            query_vector: Query embedding (shape: [dimension])
-            k: Number of results to return
-        
+            query_vector: Vector to check
+            threshold: Similarity threshold (0.90 = 90% similar)
+
         Returns:
-            Tuple of (ids, scores)
-            - ids: List of vector IDs
-            - scores: List of similarity scores (distance-based, lower = more similar)
+            True if neighborhood exists (skip fetch!)
+            False if new neighborhood (go fetch!)
         """
-        # Ensure query vector is 1D
-        if query_vector.ndim != 1:
-            query_vector = query_vector.flatten()
-        
-        # Search storage engine (searches both layers)
-        ids, distances = self.storage.search(query_vector, k)
-        
-        # Convert L2 distances to similarity scores
-        # Lower distance = higher similarity
-        # Use inverse: score = 1 / (1 + distance)
-        scores = [1.0 / (1.0 + d) for d in distances]
-        
-        logger.debug(f"[LOCAL VDB] Search returned {len(ids)} results")
-        
-        return ids, scores
-    
-    def delete_vector(self, ids: List[str]):
+        return self.storage.exists_in_dynamic_neighborhood(query_vector, threshold)
+
+    def get_weakest_dynamic_vector(self) -> Optional[str]:
         """
-        Delete vectors (only from dynamic layer).
-        
-        Args:
-            ids: List of vector IDs to delete
-        
-        Raises:
-            ValueError: If trying to delete from permanent layer
+        Find vector with lowest weight (least stars).
+
+        Used for eviction when dynamic is full.
+
+        Returns:
+            Vector ID of weakest vector, or None if empty
         """
-        self.storage.delete(ids)
-        logger.debug(f"[LOCAL VDB] Deleted {len(ids)} vectors")
-    
-    def trigger_compaction(self):
+        return self.storage.get_weakest_dynamic_vector()
+
+    def update_dynamic_weight(self, vec_id: str, delta: float):
         """
-        Manually trigger compaction of dynamic layer.
-        
-        This merges hot partition and delta segments into optimized indexes.
-        Normally called by background scheduler.
+        Update vector weight (add/remove stars).
+
+        Use:
+          - After prediction hit: update_weight(id, +1.0)
+          - After prediction miss: update_weight(id, -0.5)
         """
-        logger.info("[LOCAL VDB] Triggering compaction...")
-        self.storage.compact()
-    
+        self.storage.update_dynamic_weight(vec_id, delta)
+
+    # ═══════════════════════════════════════════════════════════
+    # UNIFIED OPERATIONS
+    # ═══════════════════════════════════════════════════════════
+
+    def search(
+        self, query_vector: np.ndarray, k: int = 5
+    ) -> Tuple[List[str], List[float]]:
+        """
+        Search BOTH tiers (permanent + dynamic).
+
+        Merges results and returns top-k.
+        """
+        # Search both
+        perm_ids, perm_scores = self.search_permanent(query_vector, k)
+        dyn_ids, dyn_scores = self.search_dynamic(query_vector, k)
+
+        # Merge
+        all_ids = perm_ids + dyn_ids
+        all_scores = perm_scores + dyn_scores
+
+        # Sort by score
+        combined = list(zip(all_ids, all_scores))
+        combined.sort(key=lambda x: x[1])
+
+        # Return top-k
+        top_k = combined[:k]
+        return [vid for vid, _ in top_k], [s for _, s in top_k]
+
+    def get_total_vectors(self) -> int:
+        """Total vectors across both tiers."""
+        return self.get_permanent_count() + self.get_dynamic_count()
+
     def get_stats(self) -> Dict:
         """
-        Get comprehensive statistics about local VDB state.
-        
+        Get comprehensive statistics.
+
         Returns:
-            Dict with layer sizes, segment counts, etc.
+            Dict with permanent, dynamic, and total stats
         """
-        stats = self.storage.get_stats()
-        
         return {
-            "total_vectors": stats["base_vectors"] + stats["cache_vectors"],
-            "permanent_layer_vectors": stats["base_vectors"],
-            "dynamic_layer_vectors": stats["cache_vectors"],
-            "permanent_partitions": stats["base_partitions"],
-            "dynamic_hot_size": stats["cache_hot_size"],
-            "dynamic_delta_segments": stats["cache_delta_segments"],
-            "deleted_count": stats["cache_deleted_count"]
+            "permanent_layer_vectors": self.get_permanent_count(),
+            "dynamic_layer_vectors": self.get_dynamic_count(),
+            "total_vectors": self.get_total_vectors(),
+            "dynamic_capacity": self.storage.dynamic_capacity,
+            "dynamic_fill_rate": self.get_dynamic_count()
+            / self.storage.dynamic_capacity
+            * 100,
+            "dynamic_stats": self.get_dynamic_stats(),
         }
-    
+
     def save_state(self):
-        """
-        Persist current state to disk.
-        
-        Saves:
-        - Dynamic layer indexes
-        - Metadata
-        - Tombstone records
-        """
-        logger.info("[LOCAL VDB] Saving state to disk...")
-        self.storage.save_state()
-    
-    def load_state(self):
-        """
-        Load previously saved state from disk.
-        
-        Called automatically during initialization if saved state exists.
-        """
-        logger.info("[LOCAL VDB] Loading state from disk...")
-        self.storage.load_state()
+        """Save dynamic layer to disk."""
+        self.storage.save_dynamic_state()
+        logger.info("[LOCAL VDB] State saved")
