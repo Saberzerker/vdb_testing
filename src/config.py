@@ -14,9 +14,9 @@ import logging
 # QDRANT CLOUD CONFIGURATION
 # ================================================================
 
-QDRANT_URL = "https://6e6e7451-fa6d-4dcb-b987-49dba2bb7373.europe-west3-0.gcp.cloud.qdrant.io:6333"
-QDRANT_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.duR7ZSdOyXclYfAm6AR8-ttSg1sAdBYmF4Vw4ykshaE"
-QDRANT_COLLECTION_NAME = "hybrid_vdb_test"
+QDRANT_URL = ""
+QDRANT_API_KEY = ""
+QDRANT_COLLECTION_NAME = ""
 
 # ================================================================
 # VECTOR & EMBEDDING CONFIGURATION
@@ -397,4 +397,5 @@ def get_config_summary():
 
 
 # Auto-create directories on import
+
 create_directories()
