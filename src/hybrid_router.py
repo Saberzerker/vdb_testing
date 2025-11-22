@@ -12,8 +12,13 @@ Core Innovation:
 - Phase-based strategy (cold start → warmup → steady state)
 - Momentum-based trajectory predictions
 
+FIXED (2025-11-17 07:10 UTC):
+- Changed metrics.log_event() to metrics.record_query()
+- Now properly tracks TIER 2 hit rate
+- Learning curve will display correctly
+
 Author: Saberzerker
-Date: 2025-11-16 23:50 UTC (THREE-TIER IMPLEMENTATION)
+Date: 2025-11-17 07:10 UTC (METRICS FIX)
 """
 
 import numpy as np
@@ -36,6 +41,7 @@ from src.config import (
     DEFAULT_SEARCH_K,
 )
 from src.config import COLD_START_QUERIES, WARMUP_QUERIES
+
 logger = logging.getLogger(__name__)
 
 
@@ -93,6 +99,8 @@ class HybridRouter:
     ) -> Dict:
         """
         Three-tier search with smart prefetching.
+        
+        FIXED: Now properly calls metrics.record_query() for all tiers
         """
         self.query_count += 1
         start_time = time.time()
@@ -111,9 +119,9 @@ class HybridRouter:
             "k": k,
         }
 
-        # ══════════════════════════════════════════════════════════════
+        # ═══════════════════════════════════════════════════════════
         # STEP 1: Check Anchor Prediction Match
-        # ══════════════════════════════════════════════════════════════
+        # ═══════════════════════════════════════════════════════════
 
         prediction_match = self.anchor_system.check_prediction_match(
             query_vector, query_id
@@ -136,9 +144,9 @@ class HybridRouter:
         else:
             result["prediction_hit"] = False
 
-        # ══════════════════════════════════════════════════════════════
+        # ═══════════════════════════════════════════════════════════
         # STEP 2: Semantic Clustering
-        # ══════════════════════════════════════════════════════════════
+        # ═══════════════════════════════════════════════════════════
 
         cluster_id, cluster_action, access_count = self.semantic_cache.add_query(
             query_vector, query_id
@@ -146,10 +154,11 @@ class HybridRouter:
 
         result["cluster_id"] = cluster_id
         result["cluster_action"] = cluster_action
+        result["cluster_access_count"] = access_count
 
-        # ══════════════════════════════════════════════════════════════
+        # ═══════════════════════════════════════════════════════════
         # STEP 3: Search TIER 1 (Permanent Local VDB)
-        # ══════════════════════════════════════════════════════════════
+        # ═══════════════════════════════════════════════════════════
 
         tier1_start = time.time()
         tier1_ids, tier1_scores = self.local_vdb.search_permanent(query_vector, k)
@@ -172,7 +181,14 @@ class HybridRouter:
                 }
             )
 
-            self.metrics.log_event("tier1_hit", latency=total_time)
+            # FIXED: Use record_query() instead of log_event()
+            if self.metrics:
+                self.metrics.record_query(
+                    source="tier1_permanent",
+                    latency_ms=tier1_latency,
+                    prefetch_fetched=0,
+                    prefetch_skipped=0
+                )
 
             logger.info(f"[ROUTER] ✅ TIER 1 HIT (permanent, {total_time:.1f}ms)")
 
@@ -189,9 +205,9 @@ class HybridRouter:
 
             return result
 
-        # ══════════════════════════════════════════════════════════════
+        # ═══════════════════════════════════════════════════════════
         # STEP 4: Search TIER 2 (Dynamic Prefetch Space)
-        # ══════════════════════════════════════════════════════════════
+        # ═══════════════════════════════════════════════════════════
 
         tier2_start = time.time()
         tier2_ids, tier2_scores = self.local_vdb.search_dynamic(query_vector, k)
@@ -220,9 +236,16 @@ class HybridRouter:
                 }
             )
 
-            self.metrics.log_event("tier2_hit", latency=total_time)
+            # FIXED: Use record_query() instead of log_event()
+            if self.metrics:
+                self.metrics.record_query(
+                    source="tier2_dynamic",
+                    latency_ms=tier2_latency,
+                    prefetch_fetched=0,
+                    prefetch_skipped=0
+                )
 
-            logger.info(f"[ROUTER] ✅ TIER 2 HIT (dynamic, {total_time:.1f}ms)")
+            logger.info(f"[ROUTER] ✅ TIER 2 HIT (dynamic, {tier2_latency:.1f}ms)")
             logger.info(f"[ROUTER] Dynamic space: {result['dynamic_fill_rate']}")
 
             # Prefetch next steps
@@ -238,9 +261,9 @@ class HybridRouter:
 
             return result
 
-        # ══════════════════════════════════════════════════════════════
+        # ═══════════════════════════════════════════════════════════
         # STEP 5: Fallback TIER 3 (Cloud VDB)
-        # ══════════════════════════════════════════════════════════════
+        # ═══════════════════════════════════════════════════════════
 
         logger.info(f"[ROUTER] ⬆️  TIER 3 fallback (cloud)")
 
@@ -263,7 +286,14 @@ class HybridRouter:
                 }
             )
 
-            self.metrics.log_event("tier3_hit", latency=total_time)
+            # FIXED: Use record_query() instead of log_event()
+            if self.metrics:
+                self.metrics.record_query(
+                    source="tier3_cloud",
+                    latency_ms=cloud_latency_ms,
+                    prefetch_fetched=0,
+                    prefetch_skipped=0
+                )
 
             logger.info(f"[ROUTER] ☁️  TIER 3 HIT (cloud, {cloud_latency_ms:.1f}ms)")
 
@@ -288,9 +318,9 @@ class HybridRouter:
             return result
 
         except Exception as e:
-            # ══════════════════════════════════════════════════════════════
+            # ════════════════════════════════════════════════════════════
             # STEP 6: Offline Graceful Degradation
-            # ══════════════════════════════════════════════════════════════
+            # ════════════════════════════════════════════════════════════
 
             logger.error(f"[ROUTER] ❌ TIER 3 error: {e}")
 
@@ -311,7 +341,14 @@ class HybridRouter:
                 }
             )
 
-            self.metrics.log_event("offline_fallback", latency=total_time)
+            # FIXED: Use record_query() instead of log_event()
+            if self.metrics:
+                self.metrics.record_query(
+                    source="offline_fallback",
+                    latency_ms=total_time,
+                    prefetch_fetched=0,
+                    prefetch_skipped=0
+                )
 
             logger.warning(f"[ROUTER] ⚠️  OFFLINE (best local result)")
 
@@ -393,6 +430,7 @@ class HybridRouter:
         def prefetch_background():
             try:
                 logger.info(f"[PREFETCH] {'─'*60}")
+                logger.info(f"[PREFETCH] ⚡ Started background prefetch (non-blocking)")
                 
                 # Determine prefetch phase
                 phase = self._get_prefetch_phase()
@@ -458,8 +496,6 @@ class HybridRouter:
             daemon=True
         )
         prefetch_thread.start()
-        
-        logger.info(f"[PREFETCH] ⚡ Started background prefetch (non-blocking)")
     
     
     def _prefetch_cold_start(
